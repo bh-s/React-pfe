@@ -1,0 +1,49 @@
+input,
+textarea[type="text"] {
+    border: none;
+    outline: none;
+    resize: none;
+}
+
+input,
+textarea[type="text"]:focus {
+    border: none;
+    outline: none;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th,
+td {
+    border: 1px solid #201d1d;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.pdfButton {
+    background-color: #3e56dee7;
+    color: #ffffff;
+    border: none;
+    padding: 7px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: auto;
+    margin-top: 8px;
+}
+
+.pdfButton:hover {
+    background-color: #3e56dea5;
+}
+
+textarea {
+    text-align: center;
+    font-size: 17px;
+    font-weight: 500;
+}

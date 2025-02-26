@@ -1,0 +1,35 @@
+/* Pending.css */
+
+.pending-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #eee7e77f;
+
+}
+
+.pending-container h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.pending-container p {
+    font-size: 1.5rem;
+}
+
+.pending-container {
+    text-align: center;
+}
+
+.pending-container img {
+    margin-top: 20px;
+    height: 40%;
+}
+
+@media screen and (max-width: 768px) {
+    .pending-container {
+        margin: 20px;
+    }
+}

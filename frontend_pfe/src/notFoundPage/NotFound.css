@@ -1,0 +1,34 @@
+.not-found-container {
+    text-align: center;
+}
+
+.not-found-image {
+    margin-top: 5%;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+.not-found-text {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.not-found-message {
+    font-size: 18px;
+}
+
+@media screen and (max-width: 768px) {
+    .not-found-image {
+        max-width: 300px;
+        margin-top: 20%;
+    }
+
+    .not-found-text {
+        font-size: 20px;
+    }
+
+    .not-found-message {
+        font-size: 16px;
+    }
+}

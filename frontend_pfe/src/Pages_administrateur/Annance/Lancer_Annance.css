@@ -1,0 +1,29 @@
+.file-input-button {
+    margin-top: 5px;
+}
+
+.margininput {
+    font-size: 17px;
+}
+
+.input3 {
+    border: 1px solid rgba(0, 0, 0, 0.653);
+    width: 370px;
+    height: 40px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+#input2 {
+    margin-top: 0;
+}
+
+.file-input-container {
+    margin-top: 10px;
+}
+
+.file-label {
+    display: block;
+    margin-bottom: 5px;
+}

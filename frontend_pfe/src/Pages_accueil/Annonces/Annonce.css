@@ -1,0 +1,42 @@
+a {
+    text-decoration: none;
+    color: rgba(53, 46, 46, 0.829);
+}
+
+a:hover {
+    color: rgba(4, 4, 19, 0.751);
+}
+
+.annonce {
+    width: 80px;
+    margin-right: 90px;
+    margin-left: 10px;
+}
+
+.mainAnnonce {
+    display: flex;
+    margin: 0;
+}
+
+@media only screen and (max-width: 1050px) {
+    .mainAnnonce {
+        display: block;
+        margin: 0;
+    }
+
+    .BoxAnnonce {
+        margin-left: 5px !important;
+        margin-right: 5px !important;
+    }
+
+    .annonce {
+        width: 60px;
+        margin-right: 30px;
+        margin-left: 10px;
+        margin-top: 0px;
+    }
+
+    #title_res {
+        font-size: 22px !important;
+    }
+}

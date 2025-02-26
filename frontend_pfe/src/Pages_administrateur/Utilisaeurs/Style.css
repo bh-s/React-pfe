@@ -1,0 +1,37 @@
+.title-tables {
+    font-size: 30px;
+    font-weight: 600;
+    color: #282323;
+    margin-bottom: -10px;
+    margin-top: 20px;
+}
+
+
+.button-group button {
+    padding: 5px 12px;
+    margin: 4px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.button-group button.accept {
+    background-color: #010fdcbb;
+    color: white;
+}
+
+.button-group button.delete {
+    background-color: #fa0808c7;
+    color: white;
+}
+
+.button-group button:hover {
+    background-color: #e9d5d5;
+}
+
+@media (max-width: 700px) {
+    #subtitle {
+        margin-left: 10px !important;
+    }
+}

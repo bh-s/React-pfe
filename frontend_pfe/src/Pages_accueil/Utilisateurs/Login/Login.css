@@ -1,0 +1,87 @@
+* {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+}
+
+.card-container {
+  display: flex;
+  
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+.card {
+  max-width: 400px;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  margin-top: 20%;
+  z-index: 1;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.input2[type="email"],
+.input2[type="password"],
+.input2[type="text"],
+.input2[type="number"],
+.btn {
+  width: 100%;
+  margin-bottom: 10px;
+  margin-top: 5px;
+  padding: 12px;
+  border: 1px solid #636262;
+  border-radius: 5px;
+}
+
+.btn {
+  background-color: #006d3a;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.btn:hover {
+  background-color: #04693ae4;
+}
+
+.a {
+  text-decoration: none;
+  color: #0662c4;
+}
+
+.a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: rgba(255, 0, 0, 0.753);
+  font-size: 15px;
+}
+
+@media only screen and (max-width: 600px) {
+  .card {
+    max-width: 340px;
+    margin: 0;
+    margin-top: 50%;
+  }
+
+  .bg-image {
+    display: none;
+  }
+
+}
+.button-back{
+
+width: 40px;
+  background-color: #04693ae4;
+ 
+}
