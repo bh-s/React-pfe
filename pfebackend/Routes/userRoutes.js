@@ -10,6 +10,7 @@ router.put('/data/:productId', userController.updateProduct);
 router.delete('/data/:productId', userController.deleteProduct);
 router.post("/login", userController.checkUser);
 router.post("/register", userController.signupUser);
+router.post("/createUserFromAdmin", userController.adminSignupUser);
 router.get("/getLibelle", userController.getCodeLibelle);
 router.post("/items", userController.createItem);
 router.get("/getItems", userController.getItems);
