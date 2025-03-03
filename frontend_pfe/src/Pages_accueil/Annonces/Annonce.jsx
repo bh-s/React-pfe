@@ -18,7 +18,7 @@ function Annonce() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://backend-i154.onrender.com/getAnnonce`);
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/getAnnonce`);
                 setItems(response.data);
                 setError("");
             } catch (error) {

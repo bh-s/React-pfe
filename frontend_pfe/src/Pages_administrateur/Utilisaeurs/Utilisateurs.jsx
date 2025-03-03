@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useColorModeValue, Box } from '@chakra-ui/react';
+import { useColorModeValue, Box, Button, Flex } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar/sidebar';
 import { FaSignOutAlt } from 'react-icons/fa';
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import axios from 'axios';
 import emailjs from 'emailjs-com';
+import SignupForm from './form';
 
 import './Style.css';
 function PendingUsers() {
@@ -27,9 +28,9 @@ function PendingUsers() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const pendingResponse = await axios.get(`http://localhost:5000/pending-users`);
-                const acceptedResponse = await axios.get(`http://localhost:5000/users-with-role-user`);
-                const deletedResponse = await axios.get(`http://localhost:5000/deleted-users`);
+                const pendingResponse = await axios.get(`${import.meta.env.VITE_API_URL}/pending-users`);
+                const acceptedResponse = await axios.get(`${import.meta.env.VITE_API_URL}/users-with-role-user`);
+                const deletedResponse = await axios.get(`${import.meta.env.VITE_API_URL}/deleted-users`);
                 setPendingUsers(pendingResponse.data);
                 setAcceptedUsers(acceptedResponse.data);
                 setDeletedUsers(deletedResponse.data);
@@ -49,7 +50,7 @@ function PendingUsers() {
 
     const handleAcceptUser = async (userId, userEmail) => {
         try {
-            await axios.put(`http://localhost:5000/user/${userId}/accept`, { role: 'user' });
+            await axios.put(`${import.meta.env.VITE_API_URL}/user/${userId}/accept`, { role: 'user' });
             const updatedPendingUsers = pendingUsers.filter(user => user._id !== userId);
             setPendingUsers(updatedPendingUsers);
             const acceptedUser = pendingUsers.find(user => user._id === userId);
@@ -70,7 +71,7 @@ function PendingUsers() {
 
     const handleDeleteUser = async (userId) => {
         try {
-            await axios.put(`http://localhost:5000/user/${userId}/delete`, { isDeleted: true });
+            await axios.put(`${import.meta.env.VITE_API_URL}/user/${userId}/delete`, { isDeleted: true });
             const deletedUser = pendingUsers.find(user => user._id === userId);
             if (deletedUser) {
                 setDeletedUsers([...deletedUsers, { ...deletedUser, status: 'Deleted' }]);
@@ -83,7 +84,7 @@ function PendingUsers() {
 
     const handleAcceptDeletedUser = async (userId, userEmail) => {
         try {
-            await axios.put(`http://localhost:5000/user/${userId}/rmdelete`, { role: 'user' });
+            await axios.put(`${import.meta.env.VITE_API_URL}/user/${userId}/rmdelete`, { role: 'user' });
             const restoredUser = deletedUsers.find(user => user._id === userId);
             if (restoredUser) {
                 setDeletedUsers(prevDeletedUsers => prevDeletedUsers.filter(user => user._id !== userId));
@@ -135,8 +136,11 @@ function PendingUsers() {
             </div>
 
             <div>
-                <h3 id='subtitle' style={{ color: '#364F6B', cursor: 'pointer', width: '250px', marginLeft: '25px', marginBottom: '-10px', fontSize: '24px' }}>
-                    Liste d'attente</h3>
+                <Flex justifyContent="space-between">
+                    <h3 id='subtitle' style={{ color: '#364F6B', cursor: 'pointer', width: '250px', marginLeft: '25px', marginBottom: '-10px', fontSize: '24px' }}>
+                        Liste d'attente</h3>
+                    <SignupForm />
+                </Flex>
                 {loading ? (
                     <p>Loading...</p>
                 ) : (
@@ -146,6 +150,7 @@ function PendingUsers() {
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Role</th>
                                     <th>Email</th>
                                     <th>Phone Number</th>
                                     <th>Document</th>
@@ -159,6 +164,7 @@ function PendingUsers() {
                                     !user.isDeleted && (
                                         <tr key={user._id}>
                                             <td>{user.name}</td>
+                                            <td>{user.role}</td>
                                             <td>{user.email}</td>
                                             <td>{user.phoneNumber}</td>
                                             <td><a href={user.fileURL} target="_blank" rel="noopener noreferrer">Document</a></td>
@@ -191,6 +197,7 @@ function PendingUsers() {
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Role</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
                                 <th>Document</th>
@@ -203,6 +210,7 @@ function PendingUsers() {
                             {acceptedUsers.map(user => (
                                 <tr key={user._id}>
                                     <td>{user.name}</td>
+                                    <td>{user.role}</td>
                                     <td>{user.email}</td>
                                     <td>{user.phoneNumber}</td>
                                     <td><a href={user.fileURL} target="_blank" rel="noopener noreferrer">Document</a></td>

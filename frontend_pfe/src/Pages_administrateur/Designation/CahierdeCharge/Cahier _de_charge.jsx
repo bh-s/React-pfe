@@ -66,7 +66,7 @@ const Cahier_de_charge = () => {
         const projectNameFromQuery = new URLSearchParams(location.search).get('project');
         setProjectName(projectNameFromQuery);
         try {
-            const response = await axios.get(`http://localhost:5000/data?projectName=${projectNameFromQuery}`);
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/data?projectName=${projectNameFromQuery}`);
             setProducts(response.data);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -136,7 +136,7 @@ const Cahier_de_charge = () => {
         try {
             if (productToUpdate) {
                 const updatedProduct = { ...productToUpdate, ...updatedFields };
-                await axios.put(`http://localhost:5000/data/${productId}`, updatedProduct);
+                await axios.put(`${import.meta.env.VITE_API_URL}/data/${productId}`, updatedProduct);
             } else {
                 console.error("Product not found.");
             }
@@ -155,7 +155,7 @@ const Cahier_de_charge = () => {
         const productToUpdate = products.find(product => product._id === productId);
         try {
             if (productToUpdate) {
-                await axios.put(`http://localhost:5000/data/${productId}`, productToUpdate);
+                await axios.put(`${import.meta.env.VITE_API_URL}/data/${productId}`, productToUpdate);
             } else {
                 console.error("Product not found.");
             }
@@ -166,7 +166,7 @@ const Cahier_de_charge = () => {
 
     const handleDeleteProduct = async (productId) => {
         try {
-            await axios.delete(`http://localhost:5000/data/${productId}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/data/${productId}`);
             const updatedProducts = products.filter(product => product._id !== productId);
             setProducts(updatedProducts);
             autoSave(productId);
@@ -188,7 +188,7 @@ const Cahier_de_charge = () => {
                 Montnt: parseFloat(productPrice) * parseInt(productQuantity)
             };
             try {
-                const response = await axios.post('http://localhost:5000/save', newProduct);
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/save`, newProduct);
                 if (response.status === 201) {
                     fetchProducts();
                     setProductName('');
@@ -1114,7 +1114,7 @@ const Cahier_de_charge = () => {
                             </button>
 
                             <Popup />
-                            
+
                         </Flex>
                     </Flex>
 

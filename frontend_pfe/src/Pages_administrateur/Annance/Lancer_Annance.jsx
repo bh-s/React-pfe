@@ -65,7 +65,7 @@ function Appel() {
                 ...formData,
                 role: "pending",
             };
-            const response = await axios.post(`http://localhost:5000/saveAnnonce`, userData);
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/saveAnnonce`, userData);
             const { data } = response;
             console.log(response.data);
             if (data) {
@@ -92,7 +92,7 @@ function Appel() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/getAnnonce`);
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/getAnnonce`);
                 setItems(response.data);
                 console.log(response.data);
                 setError("");
@@ -110,7 +110,7 @@ function Appel() {
 
     const handleDelete = async (itemIdToDelete) => {
         try {
-            const response = await axios.delete(`http://localhost:5000/deleteAnnonce/${itemIdToDelete}`);
+            const response = await axios.delete(`${import.meta.env.VITE_API_URL}/deleteAnnonce/${itemIdToDelete}`);
             console.log(response.data);
             const updatedItems = items.filter(item => item._id !== itemIdToDelete);
             setItems(updatedItems);

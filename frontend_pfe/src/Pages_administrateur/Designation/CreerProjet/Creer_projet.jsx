@@ -27,7 +27,7 @@ function Creer_projet() {
 
     const handleDelete = async (itemIdToDelete) => {
         try {
-            const response = await fetch(`http://localhost:5000/items/${itemIdToDelete}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/items/${itemIdToDelete}`, {
                 method: 'DELETE'
             });
 
@@ -45,7 +45,7 @@ function Creer_projet() {
     };
     const handleUpdate = async (itemId, updatedData) => {
         try {
-            const response = await fetch(`http://localhost:5000/items/${itemId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/items/${itemId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -71,7 +71,7 @@ function Creer_projet() {
     };
     const fetchItems = async () => {
         try {
-            const response = await fetch('http://localhost:5000/getItems');
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/getItems`);
             if (!response.ok) {
                 throw new Error('Failed to fetch items');
             }
@@ -89,7 +89,7 @@ function Creer_projet() {
                 await handleUpdate(selectedItemId, { name: inputValue, type: selectedType });
                 setSelectedItemId(null);
             } else {
-                const response = await fetch('http://localhost:5000/items', {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/items`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
