@@ -290,7 +290,7 @@ function Blog() {
                     </button>
                 </Flex>
                 <Box className='tables' mx="auto" mt={5} ml={20} bg={bg} overflowX="auto" border='2px solid #cccccc' padding='25px' borderRadius={10}>
-                    {/* <form onSubmit={handleCompleteSubmit}>
+                    <form onSubmit={handleCompleteSubmit}>
                         <input type="text" name="credit_payment" value={formData.credit_payment} onChange={handleInputChange} placeholder="Crédit de paiement" />
                         <input type="text" name="licences_engagement" value={formData.licences_engagement} onChange={handleInputChange} placeholder="Licences d'engagement" />
                         <input type="text" name="declaration" value={formData.declaration} onChange={handleInputChange} placeholder="Déclaration" />
@@ -298,7 +298,7 @@ function Blog() {
                         <input type="text" name="porte" value={formData.porte} onChange={handleInputChange} placeholder="Porte" />
                         <input type="text" name="titre" value={formData.titre} onChange={handleInputChange} placeholder="Titre" />
                         <button type="submit">Enregistrer</button>
-                    </form> */}
+                    </form>
                     <table>
                         <thead>
                             <tr>
@@ -380,10 +380,10 @@ function Blog() {
                                                 onKeyDown={(e) => handleKeyUp(e, index)}
                                             />
                                         </td>
-                                        {/* 
+
                                         <td>
                                             <button onClick={() => deleteBlogItem(item._id)}>Supprimer</button>
-                                        </td> */}
+                                        </td>
                                     </tr>
                                     {index === blogItems.length - 1 || blogItems[index + 1].porte !== item.porte ? (
                                         <tr key={`total-${index}`}>

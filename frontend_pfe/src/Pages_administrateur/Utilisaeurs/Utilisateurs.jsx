@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import axios from 'axios';
 import emailjs from 'emailjs-com';
-import SignupForm from './form';
+import SignupForm from './Form';
 
 import './Style.css';
 function PendingUsers() {
