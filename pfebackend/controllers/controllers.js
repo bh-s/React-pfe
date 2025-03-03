@@ -36,10 +36,10 @@ exports.signupUser = async (req, res) => {
             return res.status(409).json({ message: "Email already exists" });
         }
 
-        // const uploadResult = await cloudinary.uploader.upload(fileBase64, {
-        //     resource_type: 'auto',
-        //     folder: 'pdf_files'
-        // });
+        const uploadResult = await cloudinary.uploader.upload(fileBase64, {
+            resource_type: 'auto',
+            folder: 'pdf_files'
+        });
 
         const newUser = new collection({
             name,
@@ -47,8 +47,7 @@ exports.signupUser = async (req, res) => {
             email,
             role: "pending",
             password,
-            // fileURL: uploadResult.secure_url || '',
-            fileURL: '',
+            fileURL: uploadResult.secure_url,
         });
         await newUser.save();
         const token = jwtHelper.generateToken({ email: email, role: newUser.role });
@@ -61,6 +60,46 @@ exports.signupUser = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Server Error' });
+    }
+};
+exports.adminSignupUser = async (req, res) => {
+    const { name, phoneNumber, email, password, role, fileBase64 } = req.body;
+
+    try {
+        const existingUser = await collection.findOne({ email: email });
+        if (existingUser) {
+            return res.status(409).json({ message: "Email déjà utilisé" });
+        }
+
+        let fileURL = "";
+        if (role === "user" && fileBase64) {
+            const uploadResult = await cloudinary.uploader.upload(fileBase64, {
+                resource_type: "auto",
+                folder: "user_files",
+            });
+            fileURL = uploadResult.secure_url;
+        }
+
+        const newUser = new collection({
+            name,
+            phoneNumber,
+            email,
+            password,
+            role,
+            fileURL: fileURL,
+        });
+
+        await newUser.save();
+        const token = jwtHelper.generateToken({ email: email, role: newUser.role });
+
+        return res.status(201).json({
+            message: "Utilisateur créé avec succès",
+            token: token,
+            userData: newUser,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Erreur serveur" });
     }
 };
 exports.createAnnonce = async (req, res) => {
@@ -121,11 +160,11 @@ exports.deleteAnnonce = async (req, res) => {
 
 exports.getUsersByRole = async (req, res) => {
     try {
-        const users = await collection.find({ role: "user" });
+        const users = await collection.find({ role: { $in: ["admin", "controller", "user"] } });
         res.status(200).json(users);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({ message: "Server Error" });
     }
 };
 exports.getPendingUsers = async (req, res) => {

@@ -15,6 +15,7 @@ import {
     ModalCloseButton,
     useDisclosure,
 } from "@chakra-ui/react";
+import axios from "axios";
 
 const SignupForm = ({ onSubmit }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -27,13 +28,23 @@ const SignupForm = ({ onSubmit }) => {
         fileBase64: "",
     });
 
-    // Gestion du changement des inputs texte
+    const [fileError, setFileError] = useState("");
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+            ...(name === "role" && value !== "user" ? { fileBase64: "" } : {}),
+        }));
+
+        if (name === "role" && value !== "user") {
+            setFileError("");
+        }
     };
 
-    // Gestion du changement du fichier et conversion en Base64
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -41,31 +52,32 @@ const SignupForm = ({ onSubmit }) => {
             reader.readAsDataURL(file);
             reader.onload = () => {
                 setFormData({ ...formData, fileBase64: reader.result });
+                setFileError("");
             };
         }
     };
 
-    // Gestion de la soumission du formulaire
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await fetch(import.meta.env.VITE_API_URL + "/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
 
-            const data = await response.json();
-            if (response.ok) {
-                alert("Utilisateur créé avec succès !");
-                onClose();
-                if (onSubmit) onSubmit(formData);
-            } else {
-                alert(data.message || "Une erreur est survenue.");
-            }
+        if (formData.role === "user" && !formData.fileBase64) {
+            setFileError("Un fichier est requis pour les utilisateurs.");
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/createUserFromAdmin`,
+                formData,
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+            alert("Utilisateur créé avec succès !");
+            onClose();
+            if (onSubmit) onSubmit(formData);
         } catch (error) {
             console.error("Erreur lors de la création de l'utilisateur :", error);
-            alert("Erreur serveur. Veuillez réessayer.");
+            alert(error.response?.data?.message || "Erreur serveur. Veuillez réessayer.");
         }
     };
 
@@ -112,9 +124,15 @@ const SignupForm = ({ onSubmit }) => {
                                     </Select>
                                 </FormControl>
 
-                                <FormControl>
-                                    <FormLabel>Fichier (PDF/Image)</FormLabel>
-                                    <Input type="file" accept=".pdf,.jpg,.png" onChange={handleFileChange} />
+                                <FormControl isInvalid={fileError !== ""}>
+                                    <FormLabel>Fichier (PDF/Image) {formData.role === "user" && "*"}</FormLabel>
+                                    <Input
+                                        type="file"
+                                        accept=".pdf,.jpg,.png"
+                                        onChange={handleFileChange}
+                                        isDisabled={formData.role !== "user"}
+                                    />
+                                    {fileError && <p style={{ color: "red", fontSize: "0.9em" }}>{fileError}</p>}
                                 </FormControl>
 
                                 <Button type="submit" colorScheme="blue" width="full">
