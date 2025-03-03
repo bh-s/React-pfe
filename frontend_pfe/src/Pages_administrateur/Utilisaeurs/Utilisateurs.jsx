@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useColorModeValue, Box } from '@chakra-ui/react';
+import { useColorModeValue, Box, Button, Flex } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar/sidebar';
 import { FaSignOutAlt } from 'react-icons/fa';
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import axios from 'axios';
 import emailjs from 'emailjs-com';
+import SignupForm from './form';
 
 import './Style.css';
 function PendingUsers() {
@@ -135,8 +136,11 @@ function PendingUsers() {
             </div>
 
             <div>
-                <h3 id='subtitle' style={{ color: '#364F6B', cursor: 'pointer', width: '250px', marginLeft: '25px', marginBottom: '-10px', fontSize: '24px' }}>
-                    Liste d'attente</h3>
+                <Flex justifyContent="space-between">
+                    <h3 id='subtitle' style={{ color: '#364F6B', cursor: 'pointer', width: '250px', marginLeft: '25px', marginBottom: '-10px', fontSize: '24px' }}>
+                        Liste d'attente</h3>
+                    <SignupForm />
+                </Flex>
                 {loading ? (
                     <p>Loading...</p>
                 ) : (
@@ -146,6 +150,7 @@ function PendingUsers() {
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Role</th>
                                     <th>Email</th>
                                     <th>Phone Number</th>
                                     <th>Document</th>
@@ -159,6 +164,7 @@ function PendingUsers() {
                                     !user.isDeleted && (
                                         <tr key={user._id}>
                                             <td>{user.name}</td>
+                                            <td>{user.role}</td>
                                             <td>{user.email}</td>
                                             <td>{user.phoneNumber}</td>
                                             <td><a href={user.fileURL} target="_blank" rel="noopener noreferrer">Document</a></td>
@@ -191,6 +197,7 @@ function PendingUsers() {
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Role</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
                                 <th>Document</th>
@@ -203,6 +210,7 @@ function PendingUsers() {
                             {acceptedUsers.map(user => (
                                 <tr key={user._id}>
                                     <td>{user.name}</td>
+                                    <td>{user.role}</td>
                                     <td>{user.email}</td>
                                     <td>{user.phoneNumber}</td>
                                     <td><a href={user.fileURL} target="_blank" rel="noopener noreferrer">Document</a></td>
