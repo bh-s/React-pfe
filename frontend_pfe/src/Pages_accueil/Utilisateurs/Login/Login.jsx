@@ -35,6 +35,9 @@ function Login() {
             } else if (data.user.role === 'user') {
                 navigate("/home");
             }
+            else if (data.user.role === 'controller') {
+                navigate("/besoins");
+            }
             else {
                 navigate('/pending')
             }
