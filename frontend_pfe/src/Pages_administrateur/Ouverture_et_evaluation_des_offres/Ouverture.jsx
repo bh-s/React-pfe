@@ -33,7 +33,7 @@ const Ouverture = () => {
     useEffect(() => {
         const fetchRows = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/${projectName}/ouverture`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/${projectName}/ouverture`);
                 if (!response.ok) throw new Error('Échec du chargement des données');
                 const data = await response.json();
                 setRows(Array.isArray(data) ? data : []);
@@ -77,10 +77,10 @@ const Ouverture = () => {
         try {
             const token = localStorage.getItem('token');
             const url = row._id
-                ? `http://localhost:5000/${projectName}/ouverture/${row._id}`  // Update endpoint
-                : `http://localhost:5000/${projectName}/ouverture`;  // Add endpoint
+                ? `${import.meta.env.VITE_API_URL}/${projectName}/ouverture/${row._id}`
+                : `${import.meta.env.VITE_API_URL}/${projectName}/ouverture`;
 
-            const method = row._id ? 'PUT' : 'POST';  // PUT if updating, POST if creating
+            const method = row._id ? 'PUT' : 'POST';
 
             const response = await fetch(url, {
                 method: method,
@@ -110,7 +110,7 @@ const Ouverture = () => {
     const deleteRow = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/${projectName}/ouverture`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/${projectName}/ouverture`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

@@ -17,7 +17,7 @@ function Blog() {
 
     const updateBlogItem = async (index) => {
         try {
-            await axios.put(`http://localhost:5000/updateBlog/${blogItems[index]._id}`, blogItems[index]);
+            await axios.put(`${import.meta.env.VITE_API_URL}/updateBlog/${blogItems[index]._id}`, blogItems[index]);
             fetchBlogItems();
         } catch (error) {
             console.error('Error updating blog item:', error);
@@ -27,7 +27,7 @@ function Blog() {
     const deleteBlogItem = async (id) => {
         try {
             console.log('Attempting to delete blog item with id:', id);
-            await axios.delete(`http://localhost:5000/deleteBlog/${id}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/deleteBlog/${id}`);
             console.log('Blog item deleted successfully');
             const updatedBlogItems = blogItems.filter(item => item._id !== id);
             setBlogItems(updatedBlogItems);
@@ -63,7 +63,7 @@ function Blog() {
     const handleCompleteSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/saveBlog', formData);
+            await axios.post(`${import.meta.env.VITE_API_URL}/saveBlog`, formData);
             setFormData({
                 credit_payment: '',
                 licences_engagement: '',
@@ -90,7 +90,7 @@ function Blog() {
 
     const fetchBlogItems = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/getBlog');
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getBlog`);
             setBlogItems(response.data.setBlog);
         } catch (error) {
             console.error('Error fetching blog items:', error);
@@ -135,7 +135,7 @@ function Blog() {
         try {
             if (itemToUpdate) {
                 const updatedItem = { ...itemToUpdate, ...updatedFields };
-                await axios.put(`http://localhost:5000/updateBlog/${blogItemId}`, updatedItem);
+                await axios.put(`${import.meta.env.VITE_API_URL}/updateBlog/${blogItemId}`, updatedItem);
                 console.log("Autosaved successfully.");
             } else {
                 console.error("Blog item not found.");

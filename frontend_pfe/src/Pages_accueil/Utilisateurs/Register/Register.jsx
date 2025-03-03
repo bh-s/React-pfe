@@ -47,7 +47,7 @@ function Signup() {
                 ...formData,
                 role: "pending",
             };
-            const response = await axios.post(`http://localhost:5000/register`, userData);
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/register`, userData);
             const { data } = response;
             console.log(response.data);
             if (data.token) {
@@ -72,7 +72,7 @@ function Signup() {
 
     return (
         <><div className="card-container">
-              <button className="button-back" onClick={()=>{
+            <button className="button-back" onClick={() => {
                 navigate("/")
             }}>back</button>
             <div className="card">

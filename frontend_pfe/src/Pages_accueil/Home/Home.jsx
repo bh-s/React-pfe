@@ -15,7 +15,7 @@ function Home() {
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:5000/getLibelle')
+        axios.get(`${import.meta.env.VITE_API_URL}/getLibelle`)
             .then(response => {
                 setProducts(response.data);
                 console.log(response);

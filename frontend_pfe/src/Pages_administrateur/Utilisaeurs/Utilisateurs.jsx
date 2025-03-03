@@ -27,9 +27,9 @@ function PendingUsers() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const pendingResponse = await axios.get(`http://localhost:5000/pending-users`);
-                const acceptedResponse = await axios.get(`http://localhost:5000/users-with-role-user`);
-                const deletedResponse = await axios.get(`http://localhost:5000/deleted-users`);
+                const pendingResponse = await axios.get(`${import.meta.env.VITE_API_URL}/pending-users`);
+                const acceptedResponse = await axios.get(`${import.meta.env.VITE_API_URL}/users-with-role-user`);
+                const deletedResponse = await axios.get(`${import.meta.env.VITE_API_URL}/deleted-users`);
                 setPendingUsers(pendingResponse.data);
                 setAcceptedUsers(acceptedResponse.data);
                 setDeletedUsers(deletedResponse.data);
@@ -49,7 +49,7 @@ function PendingUsers() {
 
     const handleAcceptUser = async (userId, userEmail) => {
         try {
-            await axios.put(`http://localhost:5000/user/${userId}/accept`, { role: 'user' });
+            await axios.put(`${import.meta.env.VITE_API_URL}/user/${userId}/accept`, { role: 'user' });
             const updatedPendingUsers = pendingUsers.filter(user => user._id !== userId);
             setPendingUsers(updatedPendingUsers);
             const acceptedUser = pendingUsers.find(user => user._id === userId);
@@ -70,7 +70,7 @@ function PendingUsers() {
 
     const handleDeleteUser = async (userId) => {
         try {
-            await axios.put(`http://localhost:5000/user/${userId}/delete`, { isDeleted: true });
+            await axios.put(`${import.meta.env.VITE_API_URL}/user/${userId}/delete`, { isDeleted: true });
             const deletedUser = pendingUsers.find(user => user._id === userId);
             if (deletedUser) {
                 setDeletedUsers([...deletedUsers, { ...deletedUser, status: 'Deleted' }]);
@@ -83,7 +83,7 @@ function PendingUsers() {
 
     const handleAcceptDeletedUser = async (userId, userEmail) => {
         try {
-            await axios.put(`http://localhost:5000/user/${userId}/rmdelete`, { role: 'user' });
+            await axios.put(`${import.meta.env.VITE_API_URL}/user/${userId}/rmdelete`, { role: 'user' });
             const restoredUser = deletedUsers.find(user => user._id === userId);
             if (restoredUser) {
                 setDeletedUsers(prevDeletedUsers => prevDeletedUsers.filter(user => user._id !== userId));
