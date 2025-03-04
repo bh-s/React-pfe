@@ -3,8 +3,10 @@ import { Box, Table, Tbody, Tr, Th, Td, Button, Menu, Avatar, MenuButton, MenuLi
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar/sidebar';
 import { NavLink } from 'react-router-dom';
-import { FaSignOutAlt } from 'react-icons/fa';
+import { FaSave, FaSignOutAlt, FaTrashAlt } from 'react-icons/fa';
 import TableEvaluation from './table';
+
+
 const Evaluation = () => {
     const { projectName } = useParams();
     const navigate = useNavigate();
@@ -67,8 +69,6 @@ const Evaluation = () => {
                     <h1 style={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center' }}>
                         {projectName} : تقييم العروض
                     </h1>
-                    <Table variant="simple" mt={5}>
-                    </Table>
                     <TableEvaluation/>
                     <Box mt={10} textAlign="center">
                         <Button colorScheme="gray" onClick={() => navigate(-1)}>Retour</Button>
