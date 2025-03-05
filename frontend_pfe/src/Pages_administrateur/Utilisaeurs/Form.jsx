@@ -16,7 +16,6 @@ import {
     useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
-
 const SignupForm = ({ onSubmit }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [formData, setFormData] = useState({
@@ -84,15 +83,15 @@ const SignupForm = ({ onSubmit }) => {
     return (
         <>
             <Button colorScheme="blue" onClick={onOpen}>
-                Ouvrir le formulaire
+                Ajouter Utilisateur
             </Button>
 
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal isOpen={isOpen} onClose={onClose} size="xl">
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Créer un utilisateur</ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody>
+                    <ModalBody maxH="60vh" overflowY="auto">  {/* Makes the form scrollable */}
                         <Box as="form" onSubmit={handleSubmit}>
                             <VStack spacing={4}>
                                 <FormControl isRequired>

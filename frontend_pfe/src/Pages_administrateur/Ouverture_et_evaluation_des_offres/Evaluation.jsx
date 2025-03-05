@@ -70,6 +70,11 @@ const Evaluation = () => {
                         {projectName} : تقييم العروض
                     </h1>
                     <TableEvaluation/>
+                     {/* <Flex justifyContent="flex-end" p={6}>
+                                            <Button colorScheme="blue" onClick={} mr={4}>
+                                                Ajouter une ligne
+                                            </Button>
+                                        </Flex> */}
                     <Box mt={10} textAlign="center">
                         <Button colorScheme="gray" onClick={() => navigate(-1)}>Retour</Button>
                     </Box>
