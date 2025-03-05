@@ -1,11 +1,12 @@
 import React from 'react';
-import { Box, Table, Tbody, Tr, Th, Td, Button, Menu, Avatar, MenuButton, MenuList, MenuItem, Flex } from '@chakra-ui/react';
+import { Box,Button, Menu, Avatar, MenuButton, MenuList, MenuItem, Flex } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar/sidebar';
 import { NavLink } from 'react-router-dom';
-import { FaSave, FaSignOutAlt, FaTrashAlt } from 'react-icons/fa';
 import { FaSignOutAlt } from 'react-icons/fa';
 import TableEvaluation from './table';
+
+
 const Evaluation = () => {
     const { projectName } = useParams();
     const navigate = useNavigate();
@@ -58,10 +59,10 @@ const Evaluation = () => {
                 </div >
                 <Box mt={10} p={5}>
                     <Flex justifyContent="center" alignItems="center" gap={10}>
-                        <Button p={6} bgColor="white" colorScheme="blue" fontSize="20px" fontWeight="500" fontFamily="serif" borderRadius={30} mr={3} onClick={handleAction1}>
+                        <Button _hover="none" bg p={6} bgColor="teal" fontSize="20px" fontFamily="serif" color="white" borderRadius={30} mr={3} onClick={handleAction1}>
                             Procès-verbal d’ouverture
                         </Button>
-                        <Button p={6} bgColor="white" colorScheme="blue" fontSize="20px" fontWeight="500" fontFamily="serif" borderRadius={30} mr={3} onClick={handleAction2}>
+                        <Button _hover="none" bg p={6} bgColor="teal" fontSize="20px" fontFamily="serif" color="white" borderRadius={30} mr={3} onClick={handleAction2}>
                             Evaluation des offres
                         </Button>
                     </Flex>
