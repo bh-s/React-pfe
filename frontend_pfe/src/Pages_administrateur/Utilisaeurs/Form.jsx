@@ -87,62 +87,60 @@ const SignupForm = ({ onSubmit }) => {
                 Ouvrir le formulaire
             </Button>
 
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Créer un utilisateur</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <Box as="form" onSubmit={handleSubmit}>
-                            <VStack spacing={4}>
-                                <FormControl isRequired>
-                                    <FormLabel>Nom</FormLabel>
-                                    <Input name="name" value={formData.name} onChange={handleChange} />
-                                </FormControl>
+            <Modal isOpen={isOpen} onClose={onClose} size="xl">
+    <ModalOverlay />
+    <ModalContent>
+        <ModalHeader>Créer un utilisateur</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody maxH="60vh" overflowY="auto">  {/* Makes the form scrollable */}
+            <Box as="form" onSubmit={handleSubmit}>
+                <VStack spacing={4}>
+                    <FormControl isRequired>
+                        <FormLabel>Nom</FormLabel>
+                        <Input name="name" value={formData.name} onChange={handleChange} />
+                    </FormControl>
 
-                                <FormControl isRequired>
-                                    <FormLabel>Email</FormLabel>
-                                    <Input type="email" name="email" value={formData.email} onChange={handleChange} />
-                                </FormControl>
+                    <FormControl isRequired>
+                        <FormLabel>Email</FormLabel>
+                        <Input type="email" name="email" value={formData.email} onChange={handleChange} />
+                    </FormControl>
 
-                                <FormControl isRequired>
-                                    <FormLabel>Mot de passe</FormLabel>
-                                    <Input type="password" name="password" value={formData.password} onChange={handleChange} />
-                                </FormControl>
+                    <FormControl isRequired>
+                        <FormLabel>Mot de passe</FormLabel>
+                        <Input type="password" name="password" value={formData.password} onChange={handleChange} />
+                    </FormControl>
 
-                                <FormControl isRequired>
-                                    <FormLabel>Numéro de téléphone</FormLabel>
-                                    <Input name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
-                                </FormControl>
+                    <FormControl isRequired>
+                        <FormLabel>Numéro de téléphone</FormLabel>
+                        <Input name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
+                    </FormControl>
 
-                                <FormControl isRequired>
-                                    <FormLabel>Rôle</FormLabel>
-                                    <Select name="role" value={formData.role} onChange={handleChange}>
-                                        <option value="admin">Admin</option>
-                                        <option value="user">Utilisateur</option>
-                                        <option value="controller">Contrôleur financier</option>
-                                    </Select>
-                                </FormControl>
+                    <FormControl isRequired>
+                        <FormLabel>Rôle</FormLabel>
+                        <Select name="role" value={formData.role} onChange={handleChange}>
+                            <option value="admin">Admin</option>
+                            <option value="user">Utilisateur</option>
+                            <option value="controller">Contrôleur financier</option>
+                        </Select>
+                    </FormControl>
 
-                                <FormControl isInvalid={fileError !== ""}>
-                                    <FormLabel>Fichier (PDF/Image) {formData.role === "user" && "*"}</FormLabel>
-                                    <Input
-                                        type="file"
-                                        accept=".pdf,.jpg,.png"
-                                        onChange={handleFileChange}
-                                        isDisabled={formData.role !== "user"}
-                                    />
-                                    {fileError && <p style={{ color: "red", fontSize: "0.9em" }}>{fileError}</p>}
-                                </FormControl>
+                    <FormControl isInvalid={fileError !== ""}>
+                        <FormLabel>Fichier (PDF/Image) {formData.role === "user" && "*"}</FormLabel>
+                        <Input
+                            type="file"
+                            accept=".pdf,.jpg,.png"
+                            onChange={handleFileChange}
+                            isDisabled={formData.role !== "user"}
+                        />
+                        {fileError && <p style={{ color: "red", fontSize: "0.9em" }}>{fileError}</p>}
+                    </FormControl>
 
-                                <Button type="submit" colorScheme="blue" width="full">
-                                    Créer un utilisateur
-                                </Button>
-                            </VStack>
-                        </Box>
-                    </ModalBody>
-                </ModalContent>
-            </Modal>
+                    <Button colorScheme="blue" type="submit">Créer</Button>
+                </VStack>
+            </Box>
+        </ModalBody>
+    </ModalContent>
+</Modal>
         </>
     );
 };
