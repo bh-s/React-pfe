@@ -3,6 +3,7 @@ const router = express.Router();
 const blogController = require("../controllers/Blog_controllers")
 const userController = require("../controllers/controllers");
 const tableDataController = require("../controllers/Ouverture")
+const Evaluation = require("../controllers/Evaluation")
 
 router.post('/save', userController.saveData);
 router.get('/data', userController.getData);
@@ -34,5 +35,9 @@ router.post('/:projectName/ouverture', tableDataController.addRow);
 router.get('/:projectName/ouverture', tableDataController.getRows);
 router.put('/:projectName/ouverture/:id', tableDataController.updateRow);
 router.delete('/:projectName/ouverture', tableDataController.deleteRow);
+router.get("/:projectName/getevaluation", Evaluation.getEvaluations);
+router.post("/:projectName/putevaluation", Evaluation.createEvaluation);
+router.put("/:projectName/evaluation/:id", Evaluation.updateEvaluation);
+router.delete("/:projectName/evaluation/:id", Evaluation.deleteEvaluation);
 
 module.exports = router;
