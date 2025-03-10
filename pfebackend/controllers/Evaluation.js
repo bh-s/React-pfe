@@ -2,7 +2,7 @@ const Evaluation = require("../models/Evaluation");
 
 exports.getEvaluations = async (req, res) => {
     try {
-        const evaluations = await Evaluation.find();
+        const evaluations = await Evaluation.find({ projectName: req.params.projectName });
         res.status(200).json(evaluations);
     } catch (error) {
         console.error(error);
@@ -20,6 +20,8 @@ exports.createEvaluation = async (req, res) => {
         res.status(400).json({ error: "Invalid Data", details: error.message });
     }
 };
+
+
 
 exports.updateEvaluation = async (req, res) => {
     try {
