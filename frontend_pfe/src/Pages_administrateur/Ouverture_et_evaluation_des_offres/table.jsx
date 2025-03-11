@@ -655,7 +655,8 @@ const DynamicTable = () => {
                 <React.Fragment key={groupIndex}>
                   <Td textAlign="right">
                     <Flex flexDir="column">
-                      <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة مدة الانجاز</label>
+                      <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة مدة الضمان</label>
+
                       <Input
                         border="1px solid gray"
                         placeholder="نقطة مدة الانجاز"
@@ -667,37 +668,7 @@ const DynamicTable = () => {
                         bg="gray.50"
                         fontWeight="bold"
                       />
-                      <Text fontSize="sm" mt={2} color="gray.700" textAlign="right" fontStyle="italic">
-                        {`حساب النقطة = (أقل مدة انجاز / مدة الانجاز) × ${newOffer.duration || 0}`}
-                      </Text>
-                    </Flex>
-                  </Td>
-                  <Td></Td>
-                </React.Fragment>
-              ))}
-            </Tr>
-            <Tr>
-              <Td></Td>
-              <Td></Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td textAlign="right">
-                    <Flex flexDir="column">
-                      <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة مدة الضمان</label>
-                      <Input
-                        border="1px solid gray"
-                        placeholder="نقطة مدة الضمان"
-                        textAlign="right"
-                        value={calculatedPoints[groupIndex]?.warrantyPoints || "0.00"}
-                        readOnly
-                        fontSize="lg"
-                        height="2.5rem"
-                        bg="gray.50"
-                        fontWeight="bold"
-                      />
-                      <Text fontSize="sm" mt={2} color="gray.700" textAlign="right" fontStyle="italic">
-                        {`حساب النقطة = (مدة الضمان / أكبر مدة ضمان) × ${newOffer.guarantees || 0}`}
-                      </Text>
+
                     </Flex>
                   </Td>
                   <Td></Td>
@@ -712,6 +683,34 @@ const DynamicTable = () => {
                   <Td textAlign="right">
                     <Flex flexDir="column">
                       <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة العرض المالي</label>
+
+                      <Input
+                        border="1px solid gray"
+                        placeholder="نقطة مدة الضمان"
+                        textAlign="right"
+                        value={calculatedPoints[groupIndex]?.warrantyPoints || "0.00"}
+                        readOnly
+                        fontSize="lg"
+                        height="2.5rem"
+                        bg="gray.50"
+                        fontWeight="bold"
+                      />
+
+                    </Flex>
+                  </Td>
+                  <Td></Td>
+                </React.Fragment>
+              ))}
+            </Tr>
+            <Tr>
+              <Td></Td>
+              <Td></Td>
+              {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                <React.Fragment key={groupIndex}>
+                  <Td textAlign="right">
+                    <Flex flexDir="column">
+                      <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة مدة الانجاز</label>
+
                       <Input
                         border="1px solid gray"
                         placeholder="نقطة العرض المالي"
@@ -723,9 +722,7 @@ const DynamicTable = () => {
                         bg="gray.50"
                         fontWeight="bold"
                       />
-                      <Text fontSize="sm" mt={2} color="gray.700" textAlign="right" fontStyle="italic">
-                        {`حساب النقطة = (أقل عرض مالي / العرض المالي) × ${newOffer.finance || 0}`}
-                      </Text>
+
                     </Flex>
                   </Td>
                   <Td></Td>
