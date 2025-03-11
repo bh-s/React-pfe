@@ -16,13 +16,13 @@ const ProductSupplierSchema = new mongoose.Schema({
 }, { _id: false });
 
 const ProductSchema = new mongoose.Schema({
-    titre_ration: { type: String, required: true },
+    titre_ration: { type: String, required: false, default: "" },
     quantity: { type: Number, default: 0 },
     suppliers: [ProductSupplierSchema]
 });
 
 const ProjectSchema = new mongoose.Schema({
-    projectName: { type: String, required: true, unique: true },
+    projectName: { type: String, required: false, default: "" },
     products: [ProductSchema],
     suppliers: [SupplierSchema]
 }, { timestamps: true });
