@@ -9,12 +9,14 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.13.0",
     "mongoose": "^8.10.1",
-    "nodemon": "^3.1.0",
     "path": "^0.12.7"
   },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
     "build": "npm i"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
