@@ -24,13 +24,12 @@
     "react-dom": "^18.3.0",
     "react-icons": "^5.1.0",
     "react-router-dom": "^6.23.0",
-    "vite": "^6.2.1",
+    "vite": "^6.1.0",
     "vite-plugin-svgr": "^4.3.0",
     "vite-tsconfig-paths": "^5.1.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "dev": "vite",
     "start": "vite",
     "build": "vite build",
     "serve": "vite preview"
