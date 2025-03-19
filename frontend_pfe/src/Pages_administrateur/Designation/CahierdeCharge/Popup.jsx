@@ -55,6 +55,18 @@ export default function Popup() {
   };
 
   const handleSave = async () => {
+    const total = Number(newOffer.finance) + Number(newOffer.duration) + Number(newOffer.guarantees);
+
+    if (total !== 100) {
+      toast({
+        title: "يجب أن يكون مجموع النقاط 100!",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return; // Empêche l'envoi si la somme n'est pas 100
+    }
+
     try {
       const payload = {
         finance: newOffer.finance,
@@ -109,10 +121,10 @@ export default function Popup() {
               <FormControl>
                 <FormLabel fontWeight="bold" textAlign="right">نقطة أجل التسليم</FormLabel>
                 <Input
-                  name="finance" // Updated name
+                  name="finance"
                   border="1px solid gray"
                   placeholder="/100"
-                  value={newOffer.finance} // Updated value reference
+                  value={newOffer.finance}
                   onChange={handleChange}
                   textAlign="right"
                 />

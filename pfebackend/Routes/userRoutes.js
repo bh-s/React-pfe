@@ -4,6 +4,7 @@ const blogController = require("../controllers/Blog_controllers")
 const userController = require("../controllers/controllers");
 const tableDataController = require("../controllers/Ouverture")
 const Evaluation = require("../controllers/Evaluation")
+const tableController = require("../controllers/DynamicTable")
 
 router.post('/save', userController.saveData);
 router.get('/data', userController.getData);
@@ -39,5 +40,9 @@ router.get("/:projectName/getevaluation", Evaluation.getEvaluations);
 router.post("/:projectName/putevaluation", Evaluation.createEvaluation);
 router.put("/:projectName/evaluation/:id", Evaluation.updateEvaluation);
 router.delete("/:projectName/evaluation/:id", Evaluation.deleteEvaluation);
+router.post("/dataEvaluation", tableController.createProject);
+router.get("/dataEvaluation", tableController.getProjects);
+router.put("/dataEvaluation/:id", tableController.updateProject);
+router.delete("/dataEvaluation/:id", tableController.deleteProject);
 
 module.exports = router;

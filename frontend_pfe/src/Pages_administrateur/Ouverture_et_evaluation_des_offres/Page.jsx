@@ -4,8 +4,9 @@ import { NavLink } from 'react-router-dom';
 import { HiDotsVertical } from 'react-icons/hi';
 import Sidebar from '../../components/Sidebar/sidebar';
 import { format } from 'date-fns';
-import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { Menu, MenuButton, MenuList, MenuItem, Avatar } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom';
+import { FaSignOutAlt } from 'react-icons/fa';
 import '../../components/Navbar/Navbar.css';
 
 function Page() {
@@ -126,6 +127,46 @@ function Page() {
         <>
             <Sidebar />
             <main>
+                <div className="NavBar">
+                    <NavLink to="/besoins" className="Titles">
+                        Dashboard
+                    </NavLink>
+                    <div className="avatar" id="logoAvatar" style={{ display: 'flex', position: 'fixed' }}>
+                        <div style={{ marginRight: '20px', marginTop: '12px' }}>
+                            <select style={{ padding: '5px', fontSize: '15px', borderRadius: '20px' }}>
+                                <option>Langue</option>
+                                <option>Arabe</option>
+                                <option>Français</option>
+                            </select>
+                        </div>
+                        <Menu>
+                            <MenuButton
+                                as={Avatar}
+                                style={{
+                                    height: '33px',
+                                    borderRadius: '90px',
+                                    cursor: 'pointer',
+                                    marginRight: '-27px',
+                                    marginTop: '10px',
+                                    backgroundColor: '#11047A',
+                                }}
+                                src="https://bit.ly/broken-link"
+                            />
+                            <MenuList style={{ borderRadius: '5px', border: '1px solid #cccccc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.4)' }}>
+                                <MenuItem style={{ backgroundColor: 'white', padding: '15px', fontSize: '16px' }}>
+                                    {email}
+                                </MenuItem>
+                                <MenuItem
+                                    onClick={handleLogout}
+                                    style={{ color: '#F87272', backgroundColor: 'white', padding: '10px', fontSize: '16px' }}
+                                >
+                                    <FaSignOutAlt style={{ marginRight: '5px' }} />
+                                    <span>Logout</span>
+                                </MenuItem>
+                            </MenuList>
+                        </Menu>
+                    </div>
+                </div>
 
                 <Box className='tables' mx="auto" mt={25} ml={20} bg={bg} overflowX="auto" border='1px solid #cccccc' padding='15px' borderRadius={10}>
                     <table style={{ border: 'none' }}>

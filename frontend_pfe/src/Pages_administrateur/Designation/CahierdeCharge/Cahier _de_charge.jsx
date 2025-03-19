@@ -60,6 +60,7 @@ const Cahier_de_charge = () => {
     };
     useEffect(() => {
         fetchProducts();
+
     }, []);
 
     const fetchProducts = async () => {
@@ -68,6 +69,7 @@ const Cahier_de_charge = () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/data?projectName=${projectNameFromQuery}`);
             setProducts(response.data);
+            console.log(response.data)
         } catch (error) {
             console.error('Error fetching products:', error);
         }
@@ -503,7 +505,7 @@ const Cahier_de_charge = () => {
                     <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
                         تقدر أدنى مدة للضمان باثني عشر ابتداء من تاريخ التسليم المؤقت. وسيمنح المتعهد 2 نقاط عن كل ثلاثة اشهر مقترحة تبعا لهذه الفترة مع 10 نقاط كحد اقصى
                     </Text>
-                    <Text style={styles.titrearticle}> : (58 نقطة) العرض المالي *</Text>
+                    <Text style={styles.titrearticle}> : (85 نقطة) العرض المالي *</Text>
                     <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
                         {'\n'}: يمنح العرض الاقل ثمنا 85 نقطةاما العروض الاخرى فستمنح لها تتناسب تناسبا عكسيا تحسب كالتالي
                         {'\n'}النقطة = (العرض الأقل ثمنا/ العرض المالي المقدر) x (85)
