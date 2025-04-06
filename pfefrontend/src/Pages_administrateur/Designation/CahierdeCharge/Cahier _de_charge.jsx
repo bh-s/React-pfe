@@ -978,12 +978,6 @@ const Cahier_de_charge = () => {
             border: '1px solid #ddd',
             borderRadius: 5,
         },
-        title: {
-            fontSize: 14,
-            fontWeight: 'bold',
-            marginBottom: 10,
-            textAlign: 'right', // Align text to the right for RTL languages
-        },
         titleLine: {
             height: 1,
             backgroundColor: '#17365D',
@@ -1114,7 +1108,7 @@ const Cahier_de_charge = () => {
                             </div>
                             <Menu>
                                 <MenuButton as={Avatar}
-                                    style={{ height: "33px", backgroundColor: "#A0AEC0", borderRadius: "90px", cursor: "pointer", marginRight: "-27px", marginTop: '10px', backgroundColor: '#11047A' }}
+                                    style={{ height: "33px", borderRadius: "90px", cursor: "pointer", marginRight: "-27px", marginTop: '10px', backgroundColor: '#11047A' }}
                                     src='https://bit.ly/broken-link'
                                 />
                                 <MenuList style={{ borderRadius: '5px', border: '1px solid #cccccc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.4)' }}>
