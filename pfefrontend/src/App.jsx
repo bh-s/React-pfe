@@ -16,6 +16,8 @@ import NotFound from "./notFoundPage/NotFound";
 import Page from "./Pages_administrateur/Ouverture_et_evaluation_des_offres/Page";
 import Ouverture from "./Pages_administrateur/Ouverture_et_evaluation_des_offres/Ouverture";
 import Evaluation from "./Pages_administrateur/Ouverture_et_evaluation_des_offres/Evaluation";
+import Rapport from "./Pages_administrateur/Rapport_de_presentation/Rapport";
+import PageRapport from "./Pages_administrateur/Rapport_de_presentation/Page";
 function App() {
   return (
     <div className="App">
@@ -34,6 +36,8 @@ function App() {
           <Route path="/pending" element={<Pending />} />
           <Route path="/pending-users" element={<PendingUsers />} />
           <Route path="/Appel_d_offre" element={<Appel />} />
+          <Route path="/rapport-projects" element={<PageRapport />} />
+          <Route path="/rapport/:projectName" element={<Rapport />} />
           <Route path="/ouverture_et_evaluation_des_offres" element={< Page />} />
           <Route path="/ouverture_et_evaluation_des_offres/:projectName/ouverture" element={<Ouverture />} />
           <Route path="/ouverture_et_evaluation_des_offres/:projectName/evaluation" element={<Evaluation />} />

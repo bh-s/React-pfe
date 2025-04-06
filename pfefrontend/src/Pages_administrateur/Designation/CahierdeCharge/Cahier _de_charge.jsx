@@ -74,7 +74,7 @@ const Cahier_de_charge = () => {
                 console.error('Error fetching evaluation data:', error);
             }
         };
-    
+
         fetchProducts();
         fetchEvaluationData();
     }, [projectName]);
@@ -310,14 +310,14 @@ const Cahier_de_charge = () => {
                 <View style={[styles.line, styles.leftLine]} />
                 <View style={[styles.line, styles.rightLine]} />
                 {evaluationData && (
-    <>
-        <View style={styles.evaluationSection}>
-            <Text style={styles.title}>نقطة أجل التسليم: {evaluationData.finance}</Text>
-            <Text style={styles.title}>مدة الضمان: {evaluationData.duration}</Text>
-            <Text style={styles.title}>نقطة العرض المالي: {evaluationData.guarantees}</Text>
-        </View>
-    </>
-)}
+                    <>
+                        <View style={styles.evaluationSection}>
+                            <Text style={styles.title}>نقطة أجل التسليم: {evaluationData.finance}</Text>
+                            <Text style={styles.title}>مدة الضمان: {evaluationData.duration}</Text>
+                            <Text style={styles.title}>نقطة العرض المالي: {evaluationData.guarantees}</Text>
+                        </View>
+                    </>
+                )}
             </Page>
             <Page style={[styles.page, { border: "2px", borderColor: "black" }]}>
                 <View style={styles.section}>
@@ -1147,9 +1147,9 @@ const Cahier_de_charge = () => {
                                 </PDFDownloadLink>
                             </button>
                             <button className='pdfButton'>
-                            <PDFDownloadLink document={<CahierDeCharge products={products} evaluationData={evaluationData} />} fileName="Cahier de charge">
-    {({ blob, url, loading, error }) => (loading ? 'Chargement..' : <span style={{ color: 'white' }}>Cahier de charge</span>)}
-</PDFDownloadLink>
+                                <PDFDownloadLink document={<CahierDeCharge products={products} evaluationData={evaluationData} />} fileName="Cahier de charge">
+                                    {({ blob, url, loading, error }) => (loading ? 'Chargement..' : <span style={{ color: 'white' }}>Cahier de charge</span>)}
+                                </PDFDownloadLink>
                             </button>
 
                             <Popup />

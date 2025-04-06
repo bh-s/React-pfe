@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box,Button, Menu, Avatar, MenuButton, MenuList, MenuItem, Flex } from '@chakra-ui/react';
+import { Box, Button, Menu, Avatar, MenuButton, MenuList, MenuItem, Flex } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar/sidebar';
 import { NavLink } from 'react-router-dom';
@@ -69,8 +69,8 @@ const Evaluation = () => {
                     <h1 style={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center' }}>
                         {projectName} : تقييم العروض
                     </h1>
-                    <TableEvaluation/>
-                     {/* <Flex justifyContent="flex-end" p={6}>
+                    <TableEvaluation />
+                    {/* <Flex justifyContent="flex-end" p={6}>
                                             <Button colorScheme="blue" onClick={} mr={4}>
                                                 Ajouter une ligne
                                             </Button>

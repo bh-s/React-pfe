@@ -20,6 +20,7 @@ const Sidebar = () => {
     const menuItem = [
         { path: "/besoins", name: 'Désignation', icon: <ArrowRightIcon color='#FB8808' /> },
         { path: "/ouverture_et_evaluation_des_offres", name: '  Procès-verbal d’ouverture et évaluation des offres', icon: <ArrowRightIcon color='#FB8808' /> },
+        { path: "/rapport-projects", name: 'Rapport de présentation', icon: <ArrowRightIcon color='#FB8808' /> },
         { path: "/Blog", name: 'Blog budgétaire', icon: <ArrowRightIcon color='#FB8808' /> },
         { path: "/pending-users", name: 'Utilisateurs', icon: <ArrowRightIcon color='#FB8808' /> },
         { path: "/Appel_d_offre", name: 'Annance', icon: <ArrowRightIcon color='#FB8808' /> },
