@@ -543,6 +543,13 @@ const Cahier_de_charge = () => {
             العرض المالي: {evaluationData.financialOffer || 'غير متوفر'}
           </Text>
         )}
+        {evaluationData && (
+                    <>
+                        <Text style={styles.title}>نقطة أجل التسليم: {evaluationData.finance}</Text>
+                        <Text style={styles.title}>مدة الضمان: {evaluationData.duration}</Text>
+                        <Text style={styles.title}>نقطة العرض المالي: {evaluationData.guarantees}</Text>
+                    </>
+                )}
                 </View>
                 <View style={styles.bottomLine} />
                 <View style={[styles.line, styles.topLine]} />
