@@ -13,7 +13,6 @@ import { format } from 'date-fns';
 import logo from '../../../Assets/Logo-UHBC-GO-final.jpg'
 import { Avatar, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { FaSignOutAlt } from 'react-icons/fa';
-import p1 from '../../../Assets/p1.png'
 import p2 from '../../../Assets/p2.png'
 import p3 from '../../../Assets/p3.png'
 import p4 from '../../../Assets/p4.png'
@@ -62,22 +61,21 @@ const Cahier_de_charge = () => {
         fetchProducts();
 
     }, []);
-
-    useEffect(() => {
-        const fetchEvaluationData = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/${projectName}/getevaluation`);
-                if (response.data && response.data.length > 0) {
-                    setEvaluationData(response.data[0]);
+        useEffect(() => {
+            const fetchEvaluationData = async () => {
+                try {
+                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/${projectName}/getevaluation`);
+                    if (response.data && response.data.length > 0) {
+                        setEvaluationData(response.data[0]);
+                    }
+                } catch (error) {
+                    console.error('Error fetching evaluation data:', error);
                 }
-            } catch (error) {
-                console.error('Error fetching evaluation data:', error);
-            }
-        };
-
-        fetchProducts();
-        fetchEvaluationData();
-    }, [projectName]);
+            };
+        
+            fetchProducts();
+            fetchEvaluationData();
+        }, [projectName]);
     const fetchProducts = async () => {
         const projectNameFromQuery = new URLSearchParams(location.search).get('project');
         setProjectName(projectNameFromQuery);
@@ -309,15 +307,6 @@ const Cahier_de_charge = () => {
                 <View style={[styles.line, styles.topLine]} />
                 <View style={[styles.line, styles.leftLine]} />
                 <View style={[styles.line, styles.rightLine]} />
-                {evaluationData && (
-                    <>
-                        <View style={styles.evaluationSection}>
-                            <Text style={styles.title}>نقطة أجل التسليم: {evaluationData.finance}</Text>
-                            <Text style={styles.title}>مدة الضمان: {evaluationData.duration}</Text>
-                            <Text style={styles.title}>نقطة العرض المالي: {evaluationData.guarantees}</Text>
-                        </View>
-                    </>
-                )}
             </Page>
             <Page style={[styles.page, { border: "2px", borderColor: "black" }]}>
                 <View style={styles.section}>
@@ -518,27 +507,42 @@ const Cahier_de_charge = () => {
                     <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
                         : بالنسبة للحصة رقم 02 سيتم التقييم على أساس المعايير التالية
                     </Text>
-                    <Text style={styles.titrearticle}>: (05 نقاط) أجل التسليم*</Text>
-                    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
-                        : يجب على المتعهدين تحديد الآجال التي ينوون خلالها تسليم الإقتناءات، يستفيد المتعهد الذي يقترح أقصر أجل من 05 نقاط. أما المتعهدون الآخرون فسيتم تنقيطهم عن طريق تطبيق الصيغة التالية
-                    </Text>
-                    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'center', marginBottom: "1px" }]}>
-                        النقطة = (أقصر أجل / الأجل المقدر) x 05
-                    </Text>
-                    <Text style={styles.titrearticle}> :(10 نقاط) مدة الضمان *</Text>
-                    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
-                        تقدر أدنى مدة للضمان باثني عشر ابتداء من تاريخ التسليم المؤقت. وسيمنح المتعهد 2 نقاط عن كل ثلاثة اشهر مقترحة تبعا لهذه الفترة مع 10 نقاط كحد اقصى
-                    </Text>
-                    <Text style={styles.titrearticle}> : (85 نقطة) العرض المالي *</Text>
-                    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
-                        {'\n'}: يمنح العرض الاقل ثمنا 85 نقطةاما العروض الاخرى فستمنح لها تتناسب تناسبا عكسيا تحسب كالتالي
-                        {'\n'}النقطة = (العرض الأقل ثمنا/ العرض المالي المقدر) x (85)
-                        {'\n'}***أحسن عرض من حيث الـمزايا الاقتصادية يوافق للعرض الذي يتحصل على أعلى نقطة إجمالية ***
-                        {'\n'} :أما بالنسبة للحصة 01 سيتم التقييم على أساس المعايير التالية
-                    </Text>
-                    <Text style={styles.titrearticle}> :(10 نقاط) أجل التسليم </Text>
-                    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
-                        يجب على المتعهدين تحديد الآجال التي ينوون خلالها تسليم الإقتناءات، يستفيد المتعهد الذي يقترح أقصر أجل من 10 نقاط. أما المتعهدون الآخرون فسيتم تنقيطهم عن طريق تطبيق الصيغة التالية                    </Text>
+                    {/* Section 1: أجل التسليم */}
+        <Text style={styles.titrearticle}>: (05 نقاط) أجل التسليم*</Text>
+        <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
+          : يجب على المتعهدين تحديد الآجال التي ينوون خلالها تسليم الإقتناءات، يستفيد المتعهد الذي يقترح أقصر أجل من 05 نقاط. أما المتعهدون الآخرون فسيتم تنقيطهم عن طريق تطبيق الصيغة التالية
+        </Text>
+        <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'center', marginBottom: "1px" }]}>
+          النقطة = (أقصر أجل / الأجل المقدر) x 05
+        </Text>
+        {evaluationData && (
+          <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
+            أجل التسليم: {evaluationData.deliveryPeriod || 'غير متوفر'}
+          </Text>
+        )}
+
+        {/* Section 2: مدة الضمان */}
+        <Text style={styles.titrearticle}>:(10 نقاط) مدة الضمان *</Text>
+        <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
+          تقدر أدنى مدة للضمان باثني عشر ابتداء من تاريخ التسليم المؤقت. وسيمنح المتعهد 2 نقاط عن كل ثلاثة اشهر مقترحة تبعا لهذه الفترة مع 10 نقاط كحد اقصى
+        </Text>
+        {evaluationData && (
+          <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
+            مدة الضمان: {evaluationData.warrantyPeriod || 'غير متوفر'}
+          </Text>
+        )}
+        {/* Section 3: العرض المالي */}
+        <Text style={styles.titrearticle}> : (85 نقطة) العرض المالي *</Text>
+        <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
+          {'\n'}: يمنح العرض الاقل ثمنا 85 نقطةاما العروض الاخرى فستمنح لها تتناسب تناسبا عكسيا تحسب كالتالي
+          {'\n'}النقطة = (العرض الأقل ثمنا/ العرض المالي المقدر) x (85)
+          {'\n'}***أحسن عرض من حيث الـمزايا الاقتصادية يوافق للعرض الذي يتحصل على أعلى نقطة إجمالية ***
+        </Text>
+        {evaluationData && (
+          <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
+            العرض المالي: {evaluationData.financialOffer || 'غير متوفر'}
+          </Text>
+        )}
                 </View>
                 <View style={styles.bottomLine} />
                 <View style={[styles.line, styles.topLine]} />
@@ -550,7 +554,6 @@ const Cahier_de_charge = () => {
                     <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}> الامانة العامة - مكتب الصفقات - كلية العلوم الدقيقة و الاعلام الالي </Text>
                     <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>{projectName}</Text>
                     <View style={styles.titleLine} />
-                    <Image src={p1} style={[styles.imagep, { height: '550px' }]} />
                 </View>
                 <View style={styles.bottomLine} />
                 <View style={[styles.line, styles.topLine]} />
@@ -1141,9 +1144,9 @@ const Cahier_de_charge = () => {
                                 </PDFDownloadLink>
                             </button>
                             <button className='pdfButton'>
-                                <PDFDownloadLink document={<CahierDeCharge products={products} evaluationData={evaluationData} />} fileName="Cahier de charge">
-                                    {({ blob, url, loading, error }) => (loading ? 'Chargement..' : <span style={{ color: 'white' }}>Cahier de charge</span>)}
-                                </PDFDownloadLink>
+                            <PDFDownloadLink document={<CahierDeCharge products={products} evaluationData={evaluationData} />} fileName="Cahier de charge">
+    {({ blob, url, loading, error }) => (loading ? 'Chargement..' : <span style={{ color: 'white' }}>Cahier de charge</span>)}
+</PDFDownloadLink>
                             </button>
 
                             <Popup />
