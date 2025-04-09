@@ -65,6 +65,8 @@ const Cahier_de_charge = () => {
             const fetchEvaluationData = async () => {
                 try {
                     const response = await axios.get(`${import.meta.env.VITE_API_URL}/${projectName}/getevaluation`);
+                     // Log the API response to inspect its structure
+                 console.log("API Response:", response.data);
                     if (response.data && response.data.length > 0) {
                         setEvaluationData(response.data[0]);
                     }
@@ -76,6 +78,9 @@ const Cahier_de_charge = () => {
             fetchProducts();
             fetchEvaluationData();
         }, [projectName]);
+        useEffect(() => {
+            console.log("Evaluation Data State:", evaluationData);
+        }, [evaluationData]);
     const fetchProducts = async () => {
         const projectNameFromQuery = new URLSearchParams(location.search).get('project');
         setProjectName(projectNameFromQuery);
@@ -507,43 +512,55 @@ const Cahier_de_charge = () => {
                     <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
                         : بالنسبة للحصة رقم 02 سيتم التقييم على أساس المعايير التالية
                     </Text>
-                    {/* Section 1: أجل التسليم */}
-        <Text style={styles.titrearticle}>: (05 نقاط) أجل التسليم*</Text>
-        <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
-          : يجب على المتعهدين تحديد الآجال التي ينوون خلالها تسليم الإقتناءات، يستفيد المتعهد الذي يقترح أقصر أجل من 05 نقاط. أما المتعهدون الآخرون فسيتم تنقيطهم عن طريق تطبيق الصيغة التالية
-        </Text>
-        <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'center', marginBottom: "1px" }]}>
-          النقطة = (أقصر أجل / الأجل المقدر) x 05
-        </Text>
-        {evaluationData && (
-          <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
-            أجل التسليم: {evaluationData.deliveryPeriod || 'غير متوفر'}
-          </Text>
-        )}
+ 
+   {/* Section 1: أجل التسليم */}
+<Text style={styles.titrearticle}>: أجل التسليم*</Text>
+<Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px"  }]}>
+    : يجب على المتعهدين تحديد الآجال التي ينوون خلالها تسليم الإقتناءات، يستفيد المتعهد الذي يقترح أقصر أجل من 05 نقاط. أما المتعهدون الآخرون فسيتم تنقيطهم عن طريق تطبيق الصيغة التالية
+</Text>
+<Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'right', marginBottom: "1px"  }]}>
+    النقطة = (أقصر أجل / الأجل المقدر) x 05
+</Text>
+{evaluationData && (
+    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px' , color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
+        أجل التسليم: {evaluationData.finance|| 'غير متوفر'}
+    </Text>
+)}
 
-        {/* Section 2: مدة الضمان */}
-        <Text style={styles.titrearticle}>:(10 نقاط) مدة الضمان *</Text>
-        <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
-          تقدر أدنى مدة للضمان باثني عشر ابتداء من تاريخ التسليم المؤقت. وسيمنح المتعهد 2 نقاط عن كل ثلاثة اشهر مقترحة تبعا لهذه الفترة مع 10 نقاط كحد اقصى
-        </Text>
-        {evaluationData && (
-          <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
-            مدة الضمان: {evaluationData.warrantyPeriod || 'غير متوفر'}
-          </Text>
-        )}
-        {/* Section 3: العرض المالي */}
-        <Text style={styles.titrearticle}> : (85 نقطة) العرض المالي *</Text>
-        <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
-          {'\n'}: يمنح العرض الاقل ثمنا 85 نقطةاما العروض الاخرى فستمنح لها تتناسب تناسبا عكسيا تحسب كالتالي
-          {'\n'}النقطة = (العرض الأقل ثمنا/ العرض المالي المقدر) x (85)
-          {'\n'}***أحسن عرض من حيث الـمزايا الاقتصادية يوافق للعرض الذي يتحصل على أعلى نقطة إجمالية ***
-        </Text>
-        {evaluationData && (
-          <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
-            العرض المالي: {evaluationData.financialOffer || 'غير متوفر'}
-          </Text>
-        )}
+{/* Section 2: مدة الضمان */}
+<Text style={styles.titrearticle}>:  مدة الضمان *</Text>
+<Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px"  }]}>
+    تقدر أدنى مدة للضمان باثني عشر ابتداء من تاريخ التسليم المؤقت. وسيمنح المتعهد 2 نقاط عن كل ثلاثة اشهر مقترحة تبعا لهذه الفترة مع 10 نقاط كحد اقصى
+</Text>
+{evaluationData && (
+    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px' , color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
+        مدة الضمان: {evaluationData.duration || 'غير متوفر'}
+    </Text>
+)}
+
+{/* Section 3: العرض المالي */}
+<Text style={styles.titrearticle}> : العرض المالي *</Text>
+<Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px"  }]}>
+    {'\n'}: يمنح العرض الاقل ثمنا 85 نقطةاما العروض الاخرى فستمنح لها تتناسب تناسبا عكسيا تحسب كالتالي
+    {'\n'}النقطة = (العرض الأقل ثمنا/ العرض المالي المقدر) x (85)
+    {'\n'}***أحسن عرض من حيث الـمزايا الاقتصادية يوافق للعرض الذي يتحصل على أعلى نقطة إجمالية ***
+</Text>
+{evaluationData && (
+    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px'}]}>
+        العرض المالي: {evaluationData.guarantees|| 'غير متوفر'}
+    </Text>
+)}
+        {/* {evaluationData && (
+                    <>
+
+                        <Text style={styles.title}>نقطة أجل التسليم: {evaluationData.finance}</Text>
+                        <Text style={styles.title}>مدة الضمان: {evaluationData.duration}</Text>
+                        <Text style={styles.title}>نقطة العرض المالي: {evaluationData.guarantees}</Text>
+                    
+                    </>
+                )} */}
                 </View>
+ 
                 <View style={styles.bottomLine} />
                 <View style={[styles.line, styles.topLine]} />
                 <View style={[styles.line, styles.leftLine]} />
@@ -957,130 +974,136 @@ const Cahier_de_charge = () => {
         </Document>
     )
     const styles = StyleSheet.create({
-        titrearticle: {
-            fontFamily: 'Vazirmatn',
-            textAlign: 'right',
-            fontSize: "23px",
-            fontWeight: "bold",
-            color: "black",
-        },
-        par: {
-            fontFamily: 'Vazirmatn',
-            textAlign: 'right',
-            color: 'black',
-            fontSize: "18px",
-        },
-        productText: {
-            fontFamily: 'Vazirmatn',
-            textAlign: 'center',
-        },
-        evaluationSection: {
-            marginTop: 20,
-            padding: 10,
-            backgroundColor: '#f9f9f9',
-            border: '1px solid #ddd',
-            borderRadius: 5,
-        },
-        titleLine: {
-            height: 1,
-            backgroundColor: '#17365D',
-        },
-        line: {
-            position: 'absolute',
-            backgroundColor: '#17365D',
-        },
-        topLine: {
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 1,
-            margin: "20px"
-        },
-        leftLine: {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: 1,
-            margin: "20px"
-
-        },
-        rightLine: {
-            top: 0,
-            bottom: 0,
-            right: 0,
-            width: 1,
-            margin: "20px"
-
-
-        },
-        bottomLine: {
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 1,
-            backgroundColor: '#17365D',
-            margin: "20px"
-        },
-        page: {
-            flexDirection: 'row',
-            backgroundColor: '#ffffff',
-            padding: 10,
-        },
-        section: {
-            margin: 10,
-            padding: 10,
-            flexGrow: 1,
-        },
-        title: {
-            fontSize: 24,
-            fontWeight: 500,
-            marginBottom: 10,
-            color: '#364F6B',
-            textAlign: 'center',
-        },
-        table: {
-            display: 'table',
-            width: '100%',
-        },
-        tableRow: {
-            flexDirection: 'row',
-            width: '100%',
-            borderBottomWidth: 1,
-            borderTopWidth: 1,
-            borderLeftWidth: 1,
-            borderRightWidth: 1,
-            borderColor: '#202124',
-        },
-        tableHeader: {
-            backgroundColor: '#dddddd',
-            fontSize: 12,
-            textAlign: 'center',
-            borderRightWidth: 1,
-            borderColor: '#202124',
-            padding: 5,
-            flex: 1,
-        },
-        tableCell: {
-            fontSize: 10,
-            textAlign: 'center',
-            padding: 5,
-            borderRightWidth: 1,
-            borderColor: '#202124',
-            flex: 1,
-        },
-        image: {
-            width: 100,
-            height: 100,
-            alignSelf: 'center',
-        },
-        imagep: {
-            marginTop: 20,
-            width: 500,
-            height: 600,
-            alignSelf: 'center',
-        },
-    });
+            titrearticle: {
+                fontFamily: 'Vazirmatn',
+                textAlign: 'right',
+                fontSize: "23px",
+                fontWeight: "bold",
+                color: "black",
+            },
+            par: {
+                fontFamily: 'Vazirmatn',
+                textAlign: 'right',
+                color: 'black',
+                fontSize: "18px",
+            },
+            productText: {
+                fontFamily: 'Vazirmatn',
+                textAlign: 'center',
+            },
+            evaluationSection: {
+                marginTop: 20,
+                padding: 10,
+                backgroundColor: '#f9f9f9',
+                border: '1px solid #ddd',
+                borderRadius: 5,
+            },
+            title: {
+                fontSize: 14,
+                fontWeight: 'bold',
+                marginBottom: 10,
+                textAlign: 'right', // Align text to the right for RTL languages
+            },
+            titleLine: {
+                height: 1,
+                backgroundColor: '#17365D',
+            },
+            line: {
+                position: 'absolute',
+                backgroundColor: '#17365D',
+            },
+            topLine: {
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 1,
+                margin: "20px"
+            },
+            leftLine: {
+                top: 0,
+                bottom: 0,
+                left: 0,
+                width: 1,
+                margin: "20px"
+    
+            },
+            rightLine: {
+                top: 0,
+                bottom: 0,
+                right: 0,
+                width: 1,
+                margin: "20px"
+    
+    
+            },
+            bottomLine: {
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 1,
+                backgroundColor: '#17365D',
+                margin: "20px"
+            },
+            page: {
+                flexDirection: 'row',
+                backgroundColor: '#ffffff',
+                padding: 10,
+            },
+            section: {
+                margin: 10,
+                padding: 10,
+                flexGrow: 1,
+            },
+            title: {
+                fontSize: 24,
+                fontWeight: 500,
+                marginBottom: 10,
+                color: '#364F6B',
+                textAlign: 'center',
+            },
+            table: {
+                display: 'table',
+                width: '100%',
+            },
+            tableRow: {
+                flexDirection: 'row',
+                width: '100%',
+                borderBottomWidth: 1,
+                borderTopWidth: 1,
+                borderLeftWidth: 1,
+                borderRightWidth: 1,
+                borderColor: '#202124',
+            },
+            tableHeader: {
+                backgroundColor: '#dddddd',
+                fontSize: 12,
+                textAlign: 'center',
+                borderRightWidth: 1,
+                borderColor: '#202124',
+                padding: 5,
+                flex: 1,
+            },
+            tableCell: {
+                fontSize: 10,
+                textAlign: 'center',
+                padding: 5,
+                borderRightWidth: 1,
+                borderColor: '#202124',
+                flex: 1,
+            },
+            image: {
+                width: 100,
+                height: 100,
+                alignSelf: 'center',
+            },
+            imagep: {
+                marginTop: 20,
+                width: 500,
+                height: 600,
+                alignSelf: 'center',
+            },
+        });
     const calculateTextareaHeight = (ref) => {
         if (ref.current) {
             ref.current.style.height = 'auto';
@@ -1111,7 +1134,7 @@ const Cahier_de_charge = () => {
                             </div>
                             <Menu>
                                 <MenuButton as={Avatar}
-                                    style={{ height: "33px", borderRadius: "90px", cursor: "pointer", marginRight: "-27px", marginTop: '10px', backgroundColor: '#11047A' }}
+                                    style={{ height: "33px", backgroundColor: "#A0AEC0", borderRadius: "90px", cursor: "pointer", marginRight: "-27px", marginTop: '10px', backgroundColor: '#11047A' }}
                                     src='https://bit.ly/broken-link'
                                 />
                                 <MenuList style={{ borderRadius: '5px', border: '1px solid #cccccc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.4)' }}>
