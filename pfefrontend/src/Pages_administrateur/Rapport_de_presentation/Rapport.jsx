@@ -101,9 +101,6 @@ const MenuBar = ({ editor }) => {
         { label: 'Verdana', value: 'Verdana' },
     ];
 
-
-
-
     return (
         <HStack spacing={2} p={2} bg="white" borderBottom="1px" borderColor="gray.200" flexWrap="wrap">
             <Tooltip label="Police">
@@ -260,7 +257,6 @@ const MenuBar = ({ editor }) => {
                 />
             </Tooltip>
 
-            {/* Link */}
             <Tooltip label="Insérer un lien">
                 <Popover>
                     <PopoverTrigger>
@@ -327,7 +323,6 @@ function Rapport() {
     const [loading, setLoading] = useState(true);
     const [items, setItems] = useState([]);
 
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -349,7 +344,6 @@ function Rapport() {
                     if (editor) {
                         editor.commands.setContent(generateInitialContent(response.data));
                     }
-                    console.log(response.data)
                 }
             } catch (error) {
                 console.error("Erreur lors de la récupération des données:", error);
@@ -367,6 +361,7 @@ function Rapport() {
 
         fetchData();
     }, [projectName]);
+
     const generateInitialContent = (data) => {
         const uniqueData = data.filter((value, index, self) =>
             index === self.findIndex((t) => (
@@ -387,10 +382,9 @@ function Rapport() {
             ${rationParagraphs}
             ${uniqueData[0]?.titre_ration ? '' : ''}
             ${uniqueData[0]?.num_ration ? generateProductsTable(uniqueData[0].products) : ''}
-            <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">حيث فتحت الأظرفـة في جلســة علنيــة بتاريخ ${setItems?.createdAt}و المعلــن عنهــا بتاريـــخ <p/>
+            <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">حيث فتحت الأظرفـة في جلســة علنيــة بتاريخ ${items?.createdAt}و المعلــن عنهــا بتاريـــخ <p/>
         `;
     };
-
 
     const generateProductsTable = (products) => {
         if (!products || products.length === 0) return '';
@@ -525,6 +519,7 @@ function Rapport() {
                                 size="sm"
                                 cursor="pointer"
                                 bg="blue.600"
+                                style={{ height: "33px", borderRadius: "90px", cursor: "pointer", marginRight: "-27px", marginTop: '10px', backgroundColor: '#11047A' }}
                             />
                             <MenuList>
                                 <MenuItem>{email}</MenuItem>
@@ -538,7 +533,6 @@ function Rapport() {
                 </Flex>
 
                 <VStack spacing={6} p={8} align="stretch" maxW="1600px" mx="auto">
-
                     <main>
                         <MenuBar editor={editor} />
                         <Box bg="white" p={6} borderRadius="lg" boxShadow="md">
@@ -568,7 +562,6 @@ function Rapport() {
                         </Box>
 
                         <Box bg="white" borderRadius="lg" boxShadow="md" overflow="hidden">
-
                             <Box
                                 p={6}
                                 minH="400px"
@@ -576,7 +569,7 @@ function Rapport() {
                                 sx={{
                                     '.ProseMirror': {
                                         minH: '1000px',
-                                        p: 4,
+
                                         '&:focus': {
                                             outline: 'none',
                                         },
@@ -586,24 +579,26 @@ function Rapport() {
                                             fontWeight: "bold",
                                             color: '#333',
                                         },
-                                        'p': {
+                                        p: {
                                             margin: '0.5rem 0',
                                             fontSize: "1.5em",
                                             lineHeight: '1.6',
+                                            textAlign: 'right',
+                                            fontFamily: 'Times New Roman'
                                         },
                                         'ul, ol': {
                                             paddingLeft: '1.5rem',
                                             margin: '0.5rem 0',
                                         },
-                                        'table': {
+                                        table: {
                                             borderCollapse: 'collapse',
                                             width: '100%',
                                             margin: '1rem 0',
                                             'th, td': {
-                                                border: '1px solidrgb(0, 0, 0)',
+                                                border: '1px solid #000',
                                                 padding: '0.5rem',
                                             },
-                                            'th': {
+                                            th: {
                                                 backgroundColor: '#f7fafc',
                                                 fontWeight: 'bold',
                                             },
@@ -627,7 +622,7 @@ function Rapport() {
                     </main>
                 </VStack>
             </Box>
-        </Box >
+        </Box>
     );
 }
 
