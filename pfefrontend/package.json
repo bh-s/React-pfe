@@ -5,6 +5,7 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
+    "@emailjs/browser": "^4.4.1",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fortawesome/fontawesome-free": "^6.5.2",
@@ -35,7 +36,6 @@
     "date-fns": "^3.6.0",
     "docx": "^9.3.0",
     "dotenv": "^16.4.7",
-    "emailjs-com": "^3.2.0",
     "file-saver": "^2.0.5",
     "framer-motion": "^11.1.7",
     "html-docx-js": "^0.3.1",
@@ -82,7 +82,6 @@
   },
   "description": "",
   "main": "index.js",
-  "devDependencies": {},
   "keywords": [],
   "author": "",
   "license": "ISC"
