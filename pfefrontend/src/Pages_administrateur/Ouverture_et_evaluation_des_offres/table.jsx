@@ -547,10 +547,10 @@ const DynamicTable = () => {
               {Array.from({ length: groupCount }).map((_, groupIndex) => (
                 <React.Fragment key={groupIndex}>
                   <Th textAlign="center">
-                    <Text fontSize="lg" fontWeight="bold">السعر الوحدوي</Text>
+                    <Text fontSize="lg" fontWeight="bold">السعر الوحدوي(دج)</Text>
                   </Th>
                   <Th textAlign="center">
-                    <Text fontSize="lg" fontWeight="bold">السعر الكلي</Text>
+                    <Text fontSize="lg" fontWeight="bold">السعر الكلي(دج)</Text>
                   </Th>
                 </React.Fragment>
               ))}
@@ -580,7 +580,7 @@ const DynamicTable = () => {
               {Array.from({ length: groupCount }).map((_, groupIndex) => (
                 <React.Fragment key={groupIndex}>
                   <Td textAlign="right">
-                    <Text fontSize="lg" fontWeight="bold">العرض المالي "المجموع"</Text>
+                    <Text fontSize="lg" fontWeight="bold">العرض المالي "المجموع"(دج)</Text>
                   </Td>
                   <Td textAlign="center">
                     <Text fontSize="lg" fontWeight="bold">{totals[groupIndex]}</Text>
@@ -631,31 +631,6 @@ const DynamicTable = () => {
             <Tr>
               <Td></Td>
               <Td></Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                              <React.Fragment key={groupIndex}>
-                                <Td textAlign="right">
-                                  <Flex flexDir="column">
-                                    <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>مدة الضمان</label>
-                                    <Input
-                                      border="1px solid gray"
-                                      placeholder="مدة الضمان"
-                                      textAlign="right"
-                                      value={suppliers[groupIndex].duree_garantie}
-                                      onChange={(e) => handleSupplierChange(groupIndex, "duree_garantie", e.target.value)}
-                                      fontSize="lg"
-                                      height="2.5rem"
-                                      bg="white"
-                                    />
-                                  </Flex>
-                                </Td>
-                                <Td></Td>
-                              </React.Fragment>
-                            ))}
-                          </Tr>
-              
-                          <Tr>
-                            <Td></Td>
-                            <Td></Td>
                             {Array.from({ length: groupCount }).map((_, groupIndex) => (
                               <React.Fragment key={groupIndex}>
                                 <Td textAlign="right">
