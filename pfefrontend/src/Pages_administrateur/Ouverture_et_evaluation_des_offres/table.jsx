@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useState, useEffect, useMemo } from "react"
 import { useParams } from "react-router-dom"
 import {
@@ -56,54 +54,46 @@ const DynamicTable = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = React.useRef()
 
-  // Add a new state for projectName
   const [projectName, setProjectName] = useState(useParams().projectName || "")
   const location = window.location
   const [totals, setTotals] = useState(Array(initialGroupCount).fill("0.00"))
+  const [totalsTVA, setTotalsTVA] = useState(Array(initialGroupCount).fill("0.00"))
+  const [totalsTTC, setTotalsTTC] = useState(Array(initialGroupCount).fill("0.00"))
   const [newOffer, setNewOffer] = useState({
     finance: "",
     duration: "",
     guarantees: "",
   })
 
-  // Calcul des points en temps réel
   const calculatedPoints = useMemo(() => {
-    // Skip calculation if there are no suppliers or they don't have values
     if (suppliers.length === 0) return []
 
-    // Find minimum execution time (lowest is best)
     const executionTimes = suppliers
       .map((s) => Number.parseFloat(s.duree_execution))
       .filter((time) => !isNaN(time) && time > 0)
     const minExecutionTime = executionTimes.length > 0 ? Math.min(...executionTimes) : 0
 
-    // Find minimum financial offer (lowest is best)
     const financialOffers = totals.map((t) => Number.parseFloat(t)).filter((offer) => !isNaN(offer) && offer > 0)
     const minFinancialOffer = financialOffers.length > 0 ? Math.min(...financialOffers) : 0
 
-    // Find maximum warranty period (highest is best)
     const warrantyPeriods = suppliers
       .map((s) => Number.parseFloat(s.duree_garantie))
       .filter((period) => !isNaN(period) && period > 0)
     const maxWarrantyPeriod = warrantyPeriods.length > 0 ? Math.max(...warrantyPeriods) : 0
 
-    // Calculate points for each supplier
     return suppliers.map((supplier, index) => {
-      // Execution time points (lower is better)
       let executionPoints = 0
       if (minExecutionTime > 0 && Number.parseFloat(supplier.duree_execution) > 0) {
         executionPoints =
           (minExecutionTime / Number.parseFloat(supplier.duree_execution)) * Number.parseFloat(newOffer.duration || "0")
       }
 
-      // Financial offer points (lower is better)
       let financialPoints = 0
       if (minFinancialOffer > 0 && Number.parseFloat(totals[index]) > 0) {
         financialPoints =
           (minFinancialOffer / Number.parseFloat(totals[index])) * Number.parseFloat(newOffer.finance || "0")
       }
 
-      // Warranty period points (higher is better)
       let warrantyPoints = 0
       if (maxWarrantyPeriod > 0 && Number.parseFloat(supplier.duree_garantie) > 0) {
         warrantyPoints =
@@ -111,7 +101,6 @@ const DynamicTable = () => {
           Number.parseFloat(newOffer.guarantees || "0")
       }
 
-      // Total points
       const totalPoints = executionPoints + financialPoints + warrantyPoints
 
       return {
@@ -126,14 +115,11 @@ const DynamicTable = () => {
     })
   }, [suppliers, totals, newOffer])
 
-  // Calcul du classement basé sur les points totaux
   const rankings = useMemo(() => {
     if (calculatedPoints.length === 0) return []
 
-    // Trier les fournisseurs par points totaux (du plus grand au plus petit)
     const sortedSuppliers = [...calculatedPoints].sort((a, b) => b.totalPointsNumeric - a.totalPointsNumeric)
 
-    // Attribuer les rangs (1 pour le meilleur score, 2 pour le deuxième, etc.)
     const rankings = Array(calculatedPoints.length).fill(0)
 
     sortedSuppliers.forEach((supplier, index) => {
@@ -171,23 +157,18 @@ const DynamicTable = () => {
 
       if (response.data) {
         if (Array.isArray(response.data)) {
-          // If we got an array, take the first item
           if (response.data.length > 0) {
             setProducts(response.data[0].products || [])
             setProjectId(response.data[0]._id)
-
-            // Update suppliers if they exist
+            console.log(response.data)
             if (response.data[0].suppliers && response.data[0].suppliers.length > 0) {
               setSuppliers(response.data[0].suppliers)
               setGroupCount(response.data[0].suppliers.length)
             }
           }
         } else {
-          // If we got a single object
           setProducts(response.data.products || [])
           setProjectId(response.data._id)
-
-          // Update suppliers if they exist
           if (response.data.suppliers && response.data.suppliers.length > 0) {
             setSuppliers(response.data.suppliers)
             setGroupCount(response.data.suppliers.length)
@@ -226,58 +207,54 @@ const DynamicTable = () => {
     }
   }, [projectName])
 
-  const fetchProductsFromData = async () => {
-    const projectNameFromQuery = new URLSearchParams(location.search).get("project")
-    setProjectName(projectNameFromQuery || projectName)
+  useEffect(() => {
+    const fetchData = async () => {
+      const projectNameFromQuery = new URLSearchParams(location.search).get("project");
+      setProjectName(projectNameFromQuery || projectName);
 
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/data?projectName=${projectNameFromQuery || projectName}`,
-      )
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/data?projectName=${projectNameFromQuery || projectName}`,
+        );
 
-      console.log("Raw API response:", response.data)
+        console.log("Raw API response:", response.data);
 
-      if (response.data && Array.isArray(response.data)) {
-        const newTableData = response.data.map((product) => {
-          const row = Array(2 + groupCount * 2).fill("")
+        if (response.data && Array.isArray(response.data)) {
+          const newTableData = response.data.map((product) => {
+            const row = Array(2 + groupCount * 2).fill("");
 
-          row[0] = product.name || product.titre_ration || ""
-          row[1] = product.quantity ? String(product.quantity) : ""
+            row[0] = product.titre_ration || "";
+            row[1] = product.quantity ? String(product.quantity) : "";
 
-          if (product.price) {
-            for (let i = 0; i < groupCount; i++) {
-              row[2 + i * 2] = product.price ? String(product.price) : ""
-              const quantity = Number.parseFloat(row[1]) || 0
-              const price = Number.parseFloat(product.price) || 0
-              row[3 + i * 2] = (quantity * price).toFixed(2)
-            }
-          }
+            return row;
+          });
 
-          return row
-        })
-
-        setTableData(newTableData.length > 0 ? newTableData : tableData)
-        console.log("Processed table data:", newTableData)
-      } else {
+          setTableData(newTableData.length > 0 ? newTableData : tableData);
+          console.log("Processed table data:", newTableData);
+        } else {
+          toast({
+            title: "Info",
+            description: "No products found or invalid data format",
+            status: "info",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching products from /data:", error);
         toast({
-          title: "Info",
-          description: "No products found or invalid data format",
-          status: "info",
+          title: "Error",
+          description: "Failed to fetch products from data endpoint",
+          status: "error",
           duration: 3000,
           isClosable: true,
-        })
+        });
       }
-    } catch (error) {
-      console.error("Error fetching products from /data:", error)
-      toast({
-        title: "Error",
-        description: "Failed to fetch products from data endpoint",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      })
-    }
-  }
+    };
+
+    fetchData();
+  }, []);
+
 
   const debugApiData = async () => {
     try {
@@ -322,7 +299,6 @@ const DynamicTable = () => {
     try {
       setIsSaving(true)
 
-      // Mettre à jour les points calculés et les classements avant de sauvegarder
       const updatedSuppliers = suppliers.map((supplier, index) => {
         if (calculatedPoints[index]) {
           return {
@@ -422,7 +398,6 @@ const DynamicTable = () => {
   useEffect(() => {
     if (projectName) {
       fetchProducts()
-      // Don't automatically fetch from /data endpoint to avoid overwriting data
     }
   }, [projectName])
 
@@ -433,7 +408,6 @@ const DynamicTable = () => {
         row[0] = product.titre_ration || ""
         row[1] = product.quantity || ""
 
-        // Fill in supplier data if available
         if (product.suppliers && product.suppliers.length > 0) {
           product.suppliers.forEach((supplier, index) => {
             if (index < groupCount) {
@@ -480,6 +454,7 @@ const DynamicTable = () => {
   }
 
   useEffect(() => {
+    // Calculate totals (HT) for each supplier
     const newTotals = Array.from({ length: groupCount }).map((_, groupIndex) => {
       return tableData
         .reduce((acc, row) => {
@@ -490,9 +465,23 @@ const DynamicTable = () => {
         .toFixed(2)
     })
     setTotals(newTotals)
+    
+    // Calculate TVA (19% of totals)
+    const newTotalsTVA = newTotals.map(total => {
+      const totalValue = Number.parseFloat(total) || 0
+      return (totalValue * 0.19).toFixed(2)
+    })
+    setTotalsTVA(newTotalsTVA)
+    
+    // Calculate TTC (total + TVA)
+    const newTotalsTTC = newTotals.map((total, index) => {
+      const totalValue = Number.parseFloat(total) || 0
+      const tvaValue = Number.parseFloat(newTotalsTVA[index]) || 0
+      return (totalValue + tvaValue).toFixed(2)
+    })
+    setTotalsTTC(newTotalsTTC)
   }, [tableData, groupCount])
 
-  // Fonction pour obtenir la couleur du badge en fonction du classement
   const getRankColor = (rank) => {
     if (rank === 1) return "green"
     if (rank === 2) return "blue"
@@ -548,7 +537,7 @@ const DynamicTable = () => {
                     border="1px solid gray"
                     placeholder="Fournisseur"
                     mt={2}
-                    value={suppliers[groupIndex].name}
+                    value={suppliers[groupIndex].titre_ration}
                     onChange={(e) => handleSupplierChange(groupIndex, "name", e.target.value)}
                   />
                 </Th>
@@ -599,6 +588,46 @@ const DynamicTable = () => {
                 </React.Fragment>
               ))}
             </Tr>
+            {/* New rows for Montant DA (HT), TVA, and TTC */}
+            <Tr>
+              <Td colSpan={2} textAlign="right">
+                <Text fontSize="lg" fontWeight="bold">Montant DA (HT)</Text>
+              </Td>
+              {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                <React.Fragment key={groupIndex}>
+                  <Td></Td>
+                  <Td textAlign="center">
+                    <Text fontSize="lg" fontWeight="bold">{totals[groupIndex]}</Text>
+                  </Td>
+                </React.Fragment>
+              ))}
+            </Tr>
+            <Tr>
+              <Td colSpan={2} textAlign="right">
+                <Text fontSize="lg" fontWeight="bold">T.V.A 19%</Text>
+              </Td>
+              {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                <React.Fragment key={groupIndex}>
+                  <Td></Td>
+                  <Td textAlign="center">
+                    <Text fontSize="lg" fontWeight="bold">{totalsTVA[groupIndex]}</Text>
+                  </Td>
+                </React.Fragment>
+              ))}
+            </Tr>
+            <Tr>
+              <Td colSpan={2} textAlign="right">
+                <Text fontSize="lg" fontWeight="bold">Montant DA (TTC)</Text>
+              </Td>
+              {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                <React.Fragment key={groupIndex}>
+                  <Td></Td>
+                  <Td textAlign="center">
+                    <Text fontSize="lg" fontWeight="bold">{totalsTTC[groupIndex]}</Text>
+                  </Td>
+                </React.Fragment>
+              ))}
+            </Tr>
             <Tr>
               <Td></Td>
               <Td></Td>
@@ -616,132 +645,6 @@ const DynamicTable = () => {
                         fontSize="lg"
                         height="2.5rem"
                         bg="white"
-                      />
-                    </Flex>
-                  </Td>
-                  <Td></Td>
-                </React.Fragment>
-              ))}
-            </Tr>
-            <Tr>
-              <Td></Td>
-              <Td></Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td textAlign="right">
-                    <Flex flexDir="column">
-                      <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>مدة الضمان</label>
-                      <Input
-                        border="1px solid gray"
-                        placeholder="مدة الضمان"
-                        textAlign="right"
-                        value={suppliers[groupIndex].duree_garantie}
-                        onChange={(e) => handleSupplierChange(groupIndex, "duree_garantie", e.target.value)}
-                        fontSize="lg"
-                        height="2.5rem"
-                        bg="white"
-                      />
-                    </Flex>
-                  </Td>
-                  <Td></Td>
-                </React.Fragment>
-              ))}
-            </Tr>
-
-            <Tr>
-              <Td></Td>
-              <Td></Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td textAlign="right">
-                    <Flex flexDir="column">
-                      <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة مدة الضمان</label>
-
-                      <Input
-                        border="1px solid gray"
-                        placeholder="نقطة مدة الانجاز"
-                        textAlign="right"
-                        value={calculatedPoints[groupIndex]?.executionPoints || "0.00"}
-                        readOnly
-                        fontSize="lg"
-                        height="2.5rem"
-                        bg="gray.50"
-                        fontWeight="bold"
-                      />
-
-                    </Flex>
-                  </Td>
-                  <Td></Td>
-                </React.Fragment>
-              ))}
-            </Tr>
-            <Tr>
-              <Td></Td>
-              <Td></Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td textAlign="right">
-                    <Flex flexDir="column">
-                      <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة العرض المالي</label>
-
-                      <Input
-                        border="1px solid gray"
-                        placeholder="نقطة مدة الضمان"
-                        textAlign="right"
-                        value={calculatedPoints[groupIndex]?.warrantyPoints || "0.00"}
-                        readOnly
-                        fontSize="lg"
-                        height="2.5rem"
-                        bg="gray.50"
-                        fontWeight="bold"
-                      />
-
-                    </Flex>
-                  </Td>
-                  <Td></Td>
-                </React.Fragment>
-              ))}
-            </Tr>
-            <Tr>
-              <Td></Td>
-              <Td></Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td textAlign="right">
-                    <Flex flexDir="column">
-                      <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة مدة الانجاز</label>
-
-                      <Input
-                        border="1px solid gray"
-                        placeholder="نقطة العرض المالي"
-                        textAlign="right"
-                        value={calculatedPoints[groupIndex]?.financialPoints || "0.00"}
-                        readOnly
-                        fontSize="lg"
-                        height="2.5rem"
-                        bg="gray.50"
-                        fontWeight="bold"
-                      />
-
-                    </Flex>
-                  </Td>
-                  <Td></Td>
-                </React.Fragment>
-              ))}
-            </Tr>
-            <Tr>
-              <Td></Td>
-              <Td></Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td textAlign="right">
-                    <Flex flexDir="column">
-                      <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>النقطة النهائية</label>
-                      <Input
-                        placeholder="النقطة النهائية"
-                        textAlign="right"
-                        value={calculatedPoints[groupIndex]?.totalPoints || "0.00"}
-                        readOnly
                       />
                     </Flex>
                   </Td>
