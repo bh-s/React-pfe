@@ -632,59 +632,127 @@ const DynamicTable = () => {
               <Td></Td>
               <Td></Td>
               {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td textAlign="right">
-                    <Flex flexDir="column">
-                      <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>مدة الانجاز</label>
-                      <Input
-                        border="1px solid gray"
-                        placeholder="مدة الانجاز"
-                        textAlign="right"
-                        value={suppliers[groupIndex].duree_execution}
-                        onChange={(e) => handleSupplierChange(groupIndex, "duree_execution", e.target.value)}
-                        fontSize="lg"
-                        height="2.5rem"
-                        bg="white"
-                      />
-                    </Flex>
-                  </Td>
-                  <Td></Td>
-                </React.Fragment>
-              ))}
-            </Tr>
-            <Tr>
-              <Td></Td>
-              <Td></Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td textAlign="right">
-                    <Flex flexDir="column">
-                      <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>الترتيب</label>
-                      <Flex alignItems="center">
-                        <Input
-                          placeholder="الترتيب"
-                          textAlign="right"
-                          value={rankings[groupIndex] || ""}
-                          readOnly
-                          mr={2}
-                        />
-                        {rankings[groupIndex] && (
-                          <Badge
-                            colorScheme={getRankColor(rankings[groupIndex])}
-                            fontSize="1.4em"
-                            p={3}
-                            borderRadius="md"
-                            boxShadow="sm"
-                          >
-                            {rankings[groupIndex]}
-                          </Badge>
-                        )}
-                      </Flex>
-                    </Flex>
-                  </Td>
-                  <Td></Td>
-                </React.Fragment>
-              ))}
+                              <React.Fragment key={groupIndex}>
+                                <Td textAlign="right">
+                                  <Flex flexDir="column">
+                                    <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>مدة الضمان</label>
+                                    <Input
+                                      border="1px solid gray"
+                                      placeholder="مدة الضمان"
+                                      textAlign="right"
+                                      value={suppliers[groupIndex].duree_garantie}
+                                      onChange={(e) => handleSupplierChange(groupIndex, "duree_garantie", e.target.value)}
+                                      fontSize="lg"
+                                      height="2.5rem"
+                                      bg="white"
+                                    />
+                                  </Flex>
+                                </Td>
+                                <Td></Td>
+                              </React.Fragment>
+                            ))}
+                          </Tr>
+              
+                          <Tr>
+                            <Td></Td>
+                            <Td></Td>
+                            {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                              <React.Fragment key={groupIndex}>
+                                <Td textAlign="right">
+                                  <Flex flexDir="column">
+                                    <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة مدة الضمان</label>
+              
+                                    <Input
+                                      border="1px solid gray"
+                                      placeholder="نقطة مدة الانجاز"
+                                      textAlign="right"
+                                      value={calculatedPoints[groupIndex]?.executionPoints || "0.00"}
+                                      readOnly
+                                      fontSize="lg"
+                                      height="2.5rem"
+                                      bg="gray.50"
+                                      fontWeight="bold"
+                                    />
+              
+                                  </Flex>
+                                </Td>
+                                <Td></Td>
+                              </React.Fragment>
+                            ))}
+                          </Tr>
+                          <Tr>
+                            <Td></Td>
+                            <Td></Td>
+                            {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                              <React.Fragment key={groupIndex}>
+                                <Td textAlign="right">
+                                  <Flex flexDir="column">
+                                    <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة العرض المالي</label>
+              
+                                    <Input
+                                      border="1px solid gray"
+                                      placeholder="نقطة مدة الضمان"
+                                      textAlign="right"
+                                      value={calculatedPoints[groupIndex]?.warrantyPoints || "0.00"}
+                                      readOnly
+                                      fontSize="lg"
+                                      height="2.5rem"
+                                      bg="gray.50"
+                                      fontWeight="bold"
+                                    />
+              
+                                  </Flex>
+                                </Td>
+                                <Td></Td>
+                              </React.Fragment>
+                            ))}
+                          </Tr>
+                          <Tr>
+                            <Td></Td>
+                            <Td></Td>
+                            {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                              <React.Fragment key={groupIndex}>
+                                <Td textAlign="right">
+                                  <Flex flexDir="column">
+                                    <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة مدة الانجاز</label>
+              
+                                    <Input
+                                      border="1px solid gray"
+                                      placeholder="نقطة العرض المالي"
+                                      textAlign="right"
+                                      value={calculatedPoints[groupIndex]?.financialPoints || "0.00"}
+                                      readOnly
+                                      fontSize="lg"
+                                      height="2.5rem"
+                                      bg="gray.50"
+                                      fontWeight="bold"
+                                    />
+              
+                                  </Flex>
+                                </Td>
+                                <Td></Td>
+                              </React.Fragment>
+                            ))}
+                          </Tr>
+                          <Tr>
+                            <Td></Td>
+                            <Td></Td>
+                            {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                              <React.Fragment key={groupIndex}>
+                                <Td textAlign="right">
+                                  <Flex flexDir="column">
+                                    <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>النقطة النهائية</label>
+                                    <Input
+                                      placeholder="النقطة النهائية"
+                                      textAlign="right"
+                                      value={calculatedPoints[groupIndex]?.totalPoints || "0.00"}
+                                      readOnly
+                                    />
+                                  </Flex>
+                                </Td>
+                                <Td></Td>
+                              </React.Fragment>
+                            ))}
             </Tr>
           </Tfoot>
         </Table>
