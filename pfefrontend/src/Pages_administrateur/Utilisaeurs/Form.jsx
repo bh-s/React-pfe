@@ -84,7 +84,7 @@ const SignupForm = ({ onSubmit }) => {
     return (
         <>
             <Button colorScheme="blue" onClick={onOpen}>
-                Ouvrir le formulaire
+                Ajouter un utilisateur  {/* Button to open the modal */}
             </Button>
 
             <Modal isOpen={isOpen} onClose={onClose} size="xl">
