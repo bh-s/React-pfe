@@ -41,8 +41,7 @@ function App() {
           <Route path="/ouverture_et_evaluation_des_offres" element={< Page />} />
           <Route path="/ouverture_et_evaluation_des_offres/:projectName/ouverture" element={<Ouverture />} />
           <Route path="/ouverture_et_evaluation_des_offres/:projectName/evaluation" element={<Evaluation />} />
-
-          <Route path="/*" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </div>
