@@ -18,8 +18,8 @@ function NavBar() {
     return (
         <>
             <div className='top-nav'>
-                <h4 style={{ cursor: 'pointer' }}><FaPhoneAlt /> +213 (0)27727061</h4>
-                <h4 style={{ cursor: 'pointer' }}><FaPhoneAlt /> +213 (0)44 35 49 78</h4>
+                {/* <h4 style={{ cursor: 'pointer' }}><FaPhoneAlt /> +213 (0)27727061</h4>
+                <h4 style={{ cursor: 'pointer' }}><FaPhoneAlt /> +213 (0)44 35 49 78</h4> */}
                 <select className="selectLang" style={{ padding: '3px', fontSize: '15px', borderRadius: '20px', marginRight: '45px' }}>
                     <option>Langue</option>
                     <option>Arabe</option>
@@ -91,7 +91,7 @@ function NavBar() {
                         </div>
                         <div className="login-register-buttons">
                             <div className="button-container">
-                                <NavLink to="/login"> <button type='submit'>Connexion </button></NavLink>
+                                <NavLink to="/login"> <button type='submit'style={{ backgroundColor: "#17a27f" }}>Connexion </button></NavLink>
                                 <NavLink to="/signup"> <button type='submit' style={{ backgroundColor: "#17a27f" }}>Inscription</button></NavLink>
                             </div>
                         </div>
