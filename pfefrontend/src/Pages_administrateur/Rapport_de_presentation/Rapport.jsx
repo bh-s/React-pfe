@@ -376,15 +376,37 @@ function Rapport() {
         ).join('');
 
         return `
-            <h1 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">الإجراءات المكيفة</h1>
-            <h1 style="text-align: center;font-size: 20px; font-family: 'Times New Roman'">${projectName}</h1>
-            <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">استشـــارة رقم المتعلقة ب ${projectName} <p/>
-            ${rationParagraphs}
-            ${uniqueData[0]?.titre_ration ? '' : ''}
-            ${uniqueData[0]?.num_ration ? generateProductsTable(uniqueData[0].products) : ''}
-            <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">حيث فتحت الأظرفـة في جلســة علنيــة بتاريخ ${items?.createdAt}و المعلــن عنهــا بتاريـــخ <p/>
-        `;
-    };
+        <h1 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">الإجراءات المكيفة</h1>
+        <h1 style="text-align: center;font-size: 20px; font-family: 'Times New Roman'">${projectName}</h1>
+        <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">استشـــارة رقم المتعلقة ب ${projectName} <p/>
+        ${rationParagraphs}
+        ${uniqueData[0]?.titre_ration ? '' : ''}
+        ${uniqueData[0]?.num_ration ? generateProductsTable(uniqueData[0].products) : ''}
+        <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">حيث فتحت الأظرفـة في جلســة علنيــة بتاريخ ${items?.createdAt}و المعلــن عنهــا بتاريـــخ <p/>
+             <h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">I.	الإجراءات المكيفة: الاستشارات ومعايير الانتقاءة</h2>
+             <h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">1.	تعليل الإجراء:ة</h2>
+               <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">       تمت الاستشارة وفقا لأحكام المرسوم الرئاسي 15-247 المؤرخ في 16 سبتمبر 2015 المتضمن تنظيم الصفقات العمومية وتفويضات المرفق العام لا سيما المواد 13 إلى 22 منه و القانون رقم 23-12 المؤرخ في 05 أوت 2023 المحدد للقواعد العامة المتعلقة بالصفقات العمومية.
+•	تطبيقا للمادة 87 من المرسوم الرئاسي 15-247 المؤرخ في 16 سبتمبر 2015 المتضمن تنظيم الصفقات العمومية وتفويضات المرفق العام فإنه لم تتم مشاركة المؤسسات المصغرة لعدم تلبية الحاجات
+<p/>
+ <h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">   2.	معلومات حول إجراء الاستشارة:</h2>
+ <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">      إعلان عن الاستشارة بتاريخ 20-03-2024 بالإضافة إلى رسالة الاستشارة: رقم 24،25،27،28،29،30 و 32 بتاريخ 20/03/2024 المبلغة إلى المتعاملين الاقتصاديين كتابياً عن طريق الفاكس أو عن طريق الاستلام اليدوي، مع الاعلان في الموقع الالكتروني للكلية و الموقع الالكتروني للجامعة و اشهار الاعلان على مستوى غرفة التجارة ، الوكالة الوطنية لدعم تشغيل الشباب (ANSEJ) ،الوكالة الوطنية لتسيير القرض المصغر (ANGEM) الصندوق الوطني للتأمين عن البطالة (CNEC).
+ </p> 
+ <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">-	التقدير الإداري: الحصة رقم01 :700 000,00 دج، الحصة رقم03 : 200 000,00 دج ، الحصة رقم 04: 000 000,00 1 دج تم اعداد هذا التقدير وفقاً:
+•	مبلغ الميزانية.
+•	الأسعار المتداولة في السوق الوطني
+-	العارضون المشاركون مدعوون لحضور جلسة فتح الأظرفة المقرر إجراؤها بقاعة الاجتماعات بكلية العلوم الدقيقة و الإعلام الآلي 
+بتاريخ: 27/03/2024 على الساعة العاشرة (10) صباحاً.
+ </p> 
+ <h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">3. الأهلية:</h2>
+<p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">
+-	المتعهد الحاصل على الاستشارة ليس في حالة إفلاس.
+-	المتعهد الحاصلين على الاستشارة في وضعية  قانونية.
+-	المتعهد الحاصلون على الاستشارة يمارسون نفس النشاط موضوع الاستشارة و المبين في السجل التجاري لكل متعهد 
+ 
+ </p>
+<h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'"> 4.	التعريف بالمتعاملين الاقتصاديين الذين تمت استشارتهم:	</h2>
+    `;
+};
 
     const generateProductsTable = (products) => {
         if (!products || products.length === 0) return '';
