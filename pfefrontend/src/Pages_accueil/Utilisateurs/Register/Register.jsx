@@ -154,7 +154,7 @@ function Signup() {
                 </div>
             </div>
             
-            <img src={bg} alt="background wave" className="bg-image" />
+            {/* <img src={bg} alt="background wave" className="bg-image" /> */}
         </div>
     );
 }
