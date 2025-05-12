@@ -137,7 +137,7 @@ const SignupForm = ({ onSubmit }) => {
                 _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
                 transition="all 0.2s"
             >
-                Ajouter un utilisateur
+                Ajouter un Utilisateur
             </Button>
 
             <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
