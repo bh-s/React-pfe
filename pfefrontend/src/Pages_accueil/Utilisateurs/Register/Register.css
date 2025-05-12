@@ -1,14 +1,217 @@
-.file-input-button {
-    font-size: 14px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+body {
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  padding: 40px 30px;
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2d3748;
+  font-weight: 600;
+  font-size: 28px;
+}
+
+.input2 {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background-color: #f8fafc;
+}
+
+.input2:focus {
+  outline: none;
+  border-color: #006d3a;
+  box-shadow: 0 0 0 2px rgba(0, 109, 58, 0.2);
+}
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: #006d3a;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 20px 0;
+}
+
+.btn:hover:not(:disabled) {
+  background-color: #005a30;
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.a {
+  text-decoration: none;
+  color: #006d3a;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.a:hover {
+  text-decoration: underline;
+  color: #005a30;
+}
+
+.error-message {
+  color: #e53e3e;
+  font-size: 14px;
+  margin: 10px 0;
+  text-align: center;
+  padding: 8px;
+  background-color: #fff5f5;
+  border-radius: 6px;
+}
+
+.button-back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: #006d3a;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+  transition: all 0.3s ease;
+}
+
+.button-back:hover {
+  background-color: #005a30;
+  transform: scale(1.05);
+}
+
+.bg-image {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 0;
+  opacity: 0.8;
 }
 
 .register-label {
-    font-size: 15px;
-    font-weight: 600;
+  display: block;
+  margin: 15px 0 8px;
+  color: #4a5568;
+  font-size: 14px;
+  font-weight: 500;
 }
-.button-back{
 
-    width: 40px;
-    background-color: #04693ae4;
-    float:lefts ;
-    }
+.file-input-container {
+  margin-bottom: 15px;
+}
+
+.file-input-button {
+  width: 100%;
+  padding: 12px;
+  border: 1px dashed #cbd5e0;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.file-input-button:hover {
+  border-color: #006d3a;
+  background-color: #f0fff4;
+}
+
+.file-input-button:focus {
+  outline: none;
+  border-color: #006d3a;
+  box-shadow: 0 0 0 2px rgba(0, 109, 58, 0.2);
+}
+
+.login-footer {
+  margin-top: 20px;
+  text-align: center;
+  color: #718096;
+  font-size: 14px;
+}
+
+@media only screen and (max-width: 600px) {
+  .card {
+    padding: 30px 20px;
+    max-width: 90%;
+    margin: 0;
+  }
+  
+  .bg-image {
+    display: none;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+   .button-back {
+    top: 1rem;
+    left: 1rem;
+    width: 36px;
+    height: 36px;
+  }
+  .input2 {
+    padding: 12px 14px;
+  }
+  
+  .btn {
+    padding: 12px;
+  }
+}
