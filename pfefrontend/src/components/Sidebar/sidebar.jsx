@@ -1,130 +1,61 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useColorModeValue, Flex, Button } from '@chakra-ui/react';
-import { FaHome, FaBars, FaUserFriends, FaUserShield, FaMoneyBillWave, FaUserCircle, FaFileAlt, FaGavel, FaClipboardList, FaBullhorn, FaExclamationCircle, FaUndo } from "react-icons/fa";
+import { ArrowRightIcon } from '@chakra-ui/icons'
+import { FaHome, FaBars, FaUserFriends, FaUserShield, FaMoneyBillWave, FaUserCircle } from "react-icons/fa";
 import { Icon, useColorMode, Text } from "@chakra-ui/react";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
-import { motion } from 'framer-motion';
 import logo from '../images/Frame 8 (3).jpg'
 import './sidebar.css'
-
 const Sidebar = () => {
     const { colorMode, toggleColorMode } = useColorMode();
     const location = useLocation();
-    const [isOpen, setIsOpen] = useState(true); // Changed to true for default visible state
+    const [isOpen, setIsOpen] = useState(false);
     const toggleSidebar = () => setIsOpen(!isOpen);
     const sidebarBackgroundColor = useColorModeValue("white", "#1B254B");
     const textColor = useColorModeValue("black", "white");
     const iconColor = useColorModeValue("#4318FF", "white");
     const HumbiconColor = useColorModeValue("#A0AEC0", "white");
-    const activeBgColor = useColorModeValue("rgba(221, 255, 220, 0.7)", "rgba(46, 52, 90, 0.7)");
-    const sidebarRef = useRef(null);
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const handleSidebarHover = () => {
-        setIsOpen(true);
-    };
 
     const menuItem = [
-        { path: "/besoins", name: 'Désignation', icon: <FaFileAlt /> },
-        { path: "/ouverture_et_evaluation_des_offres", name: 'Procès-verbal d\'ouverture et évaluation des offres', icon: <FaGavel /> },
-        { path: "/rapport-projects", name: 'Rapport de présentation', icon: <FaClipboardList /> },
-        { path: "/Blog", name: 'Blog budgétaire', icon: <FaMoneyBillWave /> },
-        { path: "/pending-users", name: 'Utilisateurs', icon: <FaUserFriends /> },
-        { path: "/Appel_d_offre", name: 'Annance', icon: <FaBullhorn /> },
-        { path: "*", name: "Avis", icon: <FaExclamationCircle /> },
-        { path: "*", name: 'Recours', icon: <FaUndo /> },
+        { path: "/besoins", name: 'Désignation', icon: <ArrowRightIcon color='#FB8808' /> },
+        { path: "/ouverture_et_evaluation_des_offres", name: '  Procès-verbal d’ouverture et évaluation des offres', icon: <ArrowRightIcon color='#FB8808' /> },
+        { path: "/Blog", name: 'Blog budgétaire', icon: <ArrowRightIcon color='#FB8808' /> },
+        { path: "/pending-users", name: 'Utilisateurs', icon: <ArrowRightIcon color='#FB8808' /> },
+        { path: "/Appel_d_offre", name: 'Annance', icon: <ArrowRightIcon color='#FB8808' /> },
+        { path: "*", name: "Avis", icon: <ArrowRightIcon color='#FB8808' /> },
+        { path: "*", name: 'Recours', icon: <ArrowRightIcon color='#FB8808' /> },
     ];
-
-    const itemVariants = {
-        open: {
-            opacity: 1,
-            x: 0,
-            transition: { type: "spring", stiffness: 300, damping: 24 }
-        },
-        closed: { opacity: 0, x: -20 },
-    };
 
     return (
         <>
-            <div className="container" onMouseEnter={handleSidebarHover}>
-                <motion.div 
-                    className="hamburger" 
-                    onClick={toggleSidebar}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                >
+            <div className={`overlay ${isOpen ? 'active' : ''}`} onClick={toggleSidebar}></div>
+            <div className="container">
+                <div className="hamburger" onClick={toggleSidebar}>
                     <FaBars color={HumbiconColor} size="28px" />
-                </motion.div>
-                
-                <motion.div 
-                    ref={sidebarRef}
-                    className={`sidebar ${!isOpen ? 'closed' : ''}`} 
-                    style={{ backgroundColor: sidebarBackgroundColor }}
-                    animate={isOpen ? "open" : "closed"}
-                    initial="closed"
-                    variants={{
-                        open: { 
-                            width: 240, 
-                            x: 0,
-                            transition: { duration: 0.3 }
-                        },
-                        closed: { 
-                            width: 0, 
-                            x: -240,
-                            transition: { duration: 0.3 }
-                        }
-                    }}
-                >
+                </div>
+                <div className={`overlay ${isOpen ? 'active' : ''}`} onClick={toggleSidebar}></div>
+                <div className={`sidebar ${isOpen ? 'open' : ''}`} style={{ backgroundColor: sidebarBackgroundColor }}>
                     <div className="top_section" style={{ borderBottom: '2px solid #8F8F8F' }} >
-                        <motion.img 
-                            className="logo" 
-                            id='logo' 
-                            src={logo} 
-                            alt='Logo'
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                        />
+                        <img className="logo" id='logo' src={logo} alt=';' />
                     </div>
 
                     {menuItem.map((item, index) => (
-                        <motion.div
+                        <NavLink
+                            onClick={toggleSidebar}
+                            to={item.path}
                             key={index}
-                            variants={itemVariants}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <NavLink
-                                onClick={toggleSidebar}
-                                to={item.path}
-                                className="link"
-                                style={({ isActive }) => ({
-                                    color: isActive ? '#000' : textColor,
-                                    fontWeight: isActive ? "600" : "500",
-                                    background: isActive ? activeBgColor : "transparent"
-                                })}
-                            >
-                                <div className="icon" style={{ color: iconColor }}>
-                                    {item.icon}
-                                </div>
-                                <div className="link_text">{item.name}</div>
-                            </NavLink>
-                        </motion.div>
+                            className="link"
+                            style={location.pathname === item.path ?
+                                { color: '#000' } :
+                                { color: textColor, fontWeight: "500" }}>
+                            <div className="icon">{item.icon}</div>
+                            <div className="link_text">{item.name}</div>
+                        </NavLink>
                     ))}
 
-                </motion.div>
-            </div>
+                </div>
+            </div >
             <Outlet />
         </>
     );
