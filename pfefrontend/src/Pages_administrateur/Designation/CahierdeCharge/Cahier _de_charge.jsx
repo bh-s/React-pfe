@@ -1150,7 +1150,7 @@ const Cahier_de_charge = () => {
                                     style={{ height: "33px", borderRadius: "90px", cursor: "pointer", marginRight: "-27px", marginTop: '10px', backgroundColor: '#11047A' }}
                                     src='https://bit.ly/broken-link'
                                 />
-                                <MenuList style={{ borderRadius: '5px', border: '1px solid #cccccc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.4)' }}>
+                                <MenuList style={{ borderRadius: '5px', border: "none", boxShadow: '0 4px 8px rgba(0, 0, 0, 0.4)' }}>
                                     <MenuItem style={{ backgroundColor: 'white', border: "none", mt: "5px", padding: "15px", paddingTop: '10px', fontSize: '16px' }}>
                                         {email}
                                     </MenuItem>
@@ -1179,11 +1179,6 @@ const Cahier_de_charge = () => {
                             <button className='pdfButton'>
                                 <PDFDownloadLink document={<AppelOffre products={products} />} fileName="Appel d'offre">
                                     {({ blob, url, loading, error }) => (loading ? 'Chargement..' : <span style={{ color: 'white' }}>Appel d'offre</span>)}
-                                </PDFDownloadLink>
-                            </button>
-                            <button className='pdfButton'>
-                                <PDFDownloadLink document={<Designation products={products} />} fileName="Désignation">
-                                    {({ blob, url, loading, error }) => (loading ? 'Chargement..' : <span style={{ color: 'white' }}>Désignation</span>)}
                                 </PDFDownloadLink>
                             </button>
                             <button className='pdfButton'>
@@ -1415,6 +1410,13 @@ const Cahier_de_charge = () => {
                             <button className='pdfButton' onClick={handleShowInputFields}>AJOUTER</button>
                         )}
 
+                    </Box>
+                    <Box display="flex" justifyContent="flex-end" mt={4}>
+                        <button className='pdfButton'>
+                            <PDFDownloadLink document={<Designation products={products} />} fileName="Impression">
+                                {({ blob, url, loading, error }) => (loading ? 'Chargement..' : <span style={{ color: 'white' }}>Impression</span>)}
+                            </PDFDownloadLink>
+                        </button>
                     </Box>
                 </div >
             </main >
