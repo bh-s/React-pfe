@@ -57,6 +57,8 @@ const Cahier_de_charge = () => {
         localStorage.removeItem('token');
         history("/");
     };
+    const [existingLots, setExistingLots] = useState([]);
+    const [existingLotNumbers, setExistingLotNumbers] = useState([]);
     useEffect(() => {
         fetchProducts();
 
@@ -92,6 +94,16 @@ const Cahier_de_charge = () => {
             console.error('Error fetching products:', error);
         }
     };
+    useEffect(() => {
+        // Get unique lots
+        const uniqueLots = Array.from(new Set(products.map(p => p.titre_ration)));
+        setExistingLots(uniqueLots);
+    }, [products]);
+    useEffect(() => {
+        // Get unique lot numbers
+        const uniqueLotNumbers = Array.from(new Set(products.map(p => p.num_ration)));
+        setExistingLotNumbers(uniqueLotNumbers);
+    }, [products]);
     const handleProductNameChange = (event, productId) => {
         const updatedProducts = products.map(product => {
             if (product._id === productId) {
@@ -1280,22 +1292,46 @@ const Cahier_de_charge = () => {
                                     <tr>
                                         <td style={{ width: '41.4px' }}>{products.length + 1}</td>
                                         <td>
-                                            <input
-                                                type="text"
-                                                placeholder="titre"
+                                            <select 
                                                 value={titreRation}
                                                 onChange={(e) => settitreRation(e.target.value)}
                                                 style={{ width: '100%' }}
-                                            />
+                                            >
+                                                <option value="">Select or add new lot</option>
+                                                {existingLots.map((lot, index) => (
+                                                    <option key={index} value={lot}>{lot}</option>
+                                                ))}
+                                                <option value="new">+ Add New Lot</option>
+                                            </select>
+                                            {titreRation === 'new' && (
+                                                <input
+                                                    type="text"
+                                                    placeholder="Enter new lot name"
+                                                    onChange={(e) => settitreRation(e.target.value)}
+                                                    style={{ width: '100%', marginTop: '5px' }}
+                                                />
+                                            )}
                                         </td>
                                         <td>
-                                            <input
-                                                type="text"
-                                                placeholder="Num Ration"
+                                            <select 
                                                 value={numRation}
                                                 onChange={(e) => setNumRation(e.target.value)}
                                                 style={{ width: '100%' }}
-                                            />
+                                            >
+                                                <option value="">Select or add new N° DE LOT</option>
+                                                {existingLotNumbers.map((num, index) => (
+                                                    <option key={index} value={num}>{num}</option>
+                                                ))}
+                                                <option value="new">+ Add New N° DE LOT</option>
+                                            </select>
+                                            {numRation === 'new' && (
+                                                <input
+                                                    type="text"
+                                                    placeholder="Enter new N° DE LOT"
+                                                    onChange={(e) => setNumRation(e.target.value)}
+                                                    style={{ width: '100%', marginTop: '5px' }}
+                                                />
+                                            )}
                                         </td>
                                         <td>
                                             <input
