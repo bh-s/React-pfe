@@ -14,7 +14,13 @@ import {
     MenuItem,
     TableContainer,
     Flex,
-    Input
+    Input,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
 } from '@chakra-ui/react';
 import { FaTrashAlt, FaSave } from 'react-icons/fa';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -29,6 +35,9 @@ const Ouverture = () => {
     const email = localStorage.getItem('email');
     const [rows, setRows] = useState([]);
     const [newRow, setNewRow] = useState(null);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [rowToDelete, setRowToDelete] = useState(null);
+    const cancelRef = React.useRef();
 
     useEffect(() => {
         const fetchRows = async () => {
@@ -145,6 +154,22 @@ const Ouverture = () => {
         setRows(updatedRows);
     };
 
+    const handleDeleteClick = (id) => {
+        setRowToDelete(id);
+        setIsDeleteOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        await deleteRow(rowToDelete);
+        setIsDeleteOpen(false);
+        setRowToDelete(null);
+    };
+
+    const handleDeleteCancel = () => {
+        setIsDeleteOpen(false);
+        setRowToDelete(null);
+    };
+
     return (
         <>
             <Sidebar />
@@ -198,56 +223,85 @@ const Ouverture = () => {
                             Evaluation des offres
                         </Button>
                     </Flex>
-                    <h1 style={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center' }}>
+                    <h1 style={{ fontSize: '28px', fontWeight: 'bold', textAlign: 'center', margin: '30px 0', color: '#2D3748' }}>
                         {projectName}: محضر لجنة فتح الأظرفة
                     </h1>
-                    <TableContainer bgColor="white" p={10}>
+                    <TableContainer 
+                        bgColor="white" 
+                        p={6} 
+                        borderRadius="lg" 
+                        boxShadow="0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+                    >
                         <Table variant="simple" mt={5}>
                             <Tbody>
-                                <Tr>
-                                    <Th rowSpan={2}>شهادة التأمين</Th>
-                                    <Th rowSpan={2}>عدد العمال</Th>
-                                    <Th rowSpan={2}>كمية العتاد</Th>
-                                    <Th rowSpan={2}>شهادة حسن التنفيذ</Th>
-                                    <Th colSpan={3}>الملف المالي</Th>
-                                    <Th colSpan={2}>الملف التقني</Th>
-                                    <Th colSpan={2}>ملف الترشح</Th>
-                                    <Th rowSpan={2}>المترشح</Th>
+                                <Tr bgColor="#F7FAFC">
+                                    <Th rowSpan={2} textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">شهادة التأمين</Th>
+                                    <Th rowSpan={2} textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">عدد العمال</Th>
+                                    <Th rowSpan={2} textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">كمية العتاد</Th>
+                                    <Th rowSpan={2} textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">شهادة حسن التنفيذ</Th>
+                                    <Th colSpan={3} textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">الملف المالي</Th>
+                                    <Th colSpan={2} textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">الملف التقني</Th>
+                                    <Th colSpan={2} textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">ملف الترشح</Th>
+                                    <Th rowSpan={2} textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">المترشح</Th>
                                 </Tr>
-                                <Tr>
-                                    <Th>جدول الأسعار الوحدوي</Th>
-                                    <Th>الكشف الكمي والتقديري</Th>
-                                    <Th>المبلغ بكل الرسوم</Th>
-                                    <Th>مذكرة تقنية</Th>
-                                    <Th>دفتر الشروط</Th>
-                                    <Th>القانون الأساسي للشركة</Th>
-                                    <Th>وثائق التفويض</Th>
+                                <Tr bgColor="#F7FAFC">
+                                    <Th textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">جدول الأسعار الوحدوي</Th>
+                                    <Th textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">الكشف الكمي والتقديري</Th>
+                                    <Th textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">المبلغ بكل الرسوم</Th>
+                                    <Th textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">مذكرة تقنية</Th>
+                                    <Th textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">دفتر الشروط</Th>
+                                    <Th textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">القانون الأساسي للشركة</Th>
+                                    <Th textAlign="center" color="#2D3748" fontSize="14px" borderBottom="2px solid #E2E8F0">وثائق التفويض</Th>
                                 </Tr>
 
                                 {rows.map((row) => (
-                                    <Tr key={row._id}>
+                                    <Tr key={row._id} _hover={{ bgColor: "#F7FAFC" }}>
                                         <Td>
                                             <Input
                                                 value={row.assuranceCertificate}
                                                 onChange={(e) => handleInputChange(e.target.value, 'assuranceCertificate', null, row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
                                         <Td>
                                             <Input
                                                 value={row.workerCount}
                                                 onChange={(e) => handleInputChange(e.target.value, 'workerCount', null, row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
                                         <Td>
                                             <Input
                                                 value={row.equipmentQuantity}
                                                 onChange={(e) => handleInputChange(e.target.value, 'equipmentQuantity', null, row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
                                         <Td>
                                             <Input
                                                 value={row.executionCertificate}
                                                 onChange={(e) => handleInputChange(e.target.value, 'executionCertificate', null, row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
 
@@ -255,18 +309,36 @@ const Ouverture = () => {
                                             <Input
                                                 value={row.financialFile?.unitPriceTable}
                                                 onChange={(e) => handleInputChange(e.target.value, 'financialFile', 'unitPriceTable', row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
                                         <Td>
                                             <Input
                                                 value={row.financialFile?.quantityEstimation}
                                                 onChange={(e) => handleInputChange(e.target.value, 'financialFile', 'quantityEstimation', row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
                                         <Td>
                                             <Input
                                                 value={row.financialFile?.totalPriceWithTax}
                                                 onChange={(e) => handleInputChange(e.target.value, 'financialFile', 'totalPriceWithTax', row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
 
@@ -274,12 +346,24 @@ const Ouverture = () => {
                                             <Input
                                                 value={row.technicalFile?.technicalNote}
                                                 onChange={(e) => handleInputChange(e.target.value, 'technicalFile', 'technicalNote', row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
                                         <Td>
                                             <Input
                                                 value={row.technicalFile?.specificationBook}
                                                 onChange={(e) => handleInputChange(e.target.value, 'technicalFile', 'specificationBook', row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
 
@@ -287,57 +371,91 @@ const Ouverture = () => {
                                             <Input
                                                 value={row.submissionFile?.companyStatutes}
                                                 onChange={(e) => handleInputChange(e.target.value, 'submissionFile', 'companyStatutes', row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
                                         <Td>
                                             <Input
                                                 value={row.submissionFile?.authorizationDocs}
                                                 onChange={(e) => handleInputChange(e.target.value, 'submissionFile', 'authorizationDocs', row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
                                         <Td>
                                             <Input
                                                 value={row.candidateName}
                                                 onChange={(e) => handleInputChange(e.target.value, 'candidateName', null, row._id)}
+                                                size="sm"
+                                                borderRadius="md"
+                                                _focus={{
+                                                    borderColor: "teal.500",
+                                                    boxShadow: "0 0 0 1px teal.500"
+                                                }}
                                             />
                                         </Td>
 
                                         <Td>
-                                            <Button colorScheme="green" size="sm" onClick={() => saveRow(row)} mr={2}>
-                                                <FaSave color="white" size="1rem" />
-                                            </Button>
-                                            <Button colorScheme="red" size="sm" onClick={() => deleteRow(row._id)}>
-                                                <FaTrashAlt color="white" size="1rem" />
-                                            </Button>
+                                            <Flex gap={2}>
+                                                <Button 
+                                                    colorScheme="teal" 
+                                                    size="sm" 
+                                                    onClick={() => saveRow(row)}
+                                                    _hover={{ transform: 'translateY(-1px)' }}
+                                                    transition="all 0.2s"
+                                                >
+                                                    <FaSave color="white" size="1rem" />
+                                                </Button>
+                                                <Button 
+                                                    colorScheme="red" 
+                                                    size="sm" 
+                                                    onClick={() => handleDeleteClick(row._id)}
+                                                    _hover={{ transform: 'translateY(-1px)' }}
+                                                    transition="all 0.2s"
+                                                >
+                                                    <FaTrashAlt color="white" size="1rem" />
+                                                </Button>
+                                            </Flex>
                                         </Td>
                                     </Tr>
                                 ))}
 
                                 {newRow && (
-                                    <Tr>
-                                        <Td><Input value={newRow.assuranceCertificate} onChange={(e) => setNewRow({ ...newRow, assuranceCertificate: e.target.value })} /></Td>
-                                        <Td><Input value={newRow.workerCount} onChange={(e) => setNewRow({ ...newRow, workerCount: e.target.value })} /></Td>
-                                        <Td><Input value={newRow.equipmentQuantity} onChange={(e) => setNewRow({ ...newRow, equipmentQuantity: e.target.value })} /></Td>
-                                        <Td><Input value={newRow.executionCertificate} onChange={(e) => setNewRow({ ...newRow, executionCertificate: e.target.value })} /></Td>
+                                    <Tr _hover={{ bgColor: "#F7FAFC" }}>
+                                        <Td><Input value={newRow.assuranceCertificate} onChange={(e) => setNewRow({ ...newRow, assuranceCertificate: e.target.value })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
+                                        <Td><Input value={newRow.workerCount} onChange={(e) => setNewRow({ ...newRow, workerCount: e.target.value })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
+                                        <Td><Input value={newRow.equipmentQuantity} onChange={(e) => setNewRow({ ...newRow, equipmentQuantity: e.target.value })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
+                                        <Td><Input value={newRow.executionCertificate} onChange={(e) => setNewRow({ ...newRow, executionCertificate: e.target.value })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
 
-                                        <Td><Input value={newRow.financialFile.unitPriceTable} onChange={(e) => setNewRow({ ...newRow, financialFile: { ...newRow.financialFile, unitPriceTable: e.target.value } })} /></Td>
-                                        <Td><Input value={newRow.financialFile.quantityEstimation} onChange={(e) => setNewRow({ ...newRow, financialFile: { ...newRow.financialFile, quantityEstimation: e.target.value } })} /></Td>
-                                        <Td><Input value={newRow.financialFile.totalPriceWithTax} onChange={(e) => setNewRow({ ...newRow, financialFile: { ...newRow.financialFile, totalPriceWithTax: e.target.value } })} /></Td>
+                                        <Td><Input value={newRow.financialFile.unitPriceTable} onChange={(e) => setNewRow({ ...newRow, financialFile: { ...newRow.financialFile, unitPriceTable: e.target.value } })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
+                                        <Td><Input value={newRow.financialFile.quantityEstimation} onChange={(e) => setNewRow({ ...newRow, financialFile: { ...newRow.financialFile, quantityEstimation: e.target.value } })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
+                                        <Td><Input value={newRow.financialFile.totalPriceWithTax} onChange={(e) => setNewRow({ ...newRow, financialFile: { ...newRow.financialFile, totalPriceWithTax: e.target.value } })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
 
-                                        <Td><Input value={newRow.technicalFile.technicalNote} onChange={(e) => setNewRow({ ...newRow, technicalFile: { ...newRow.technicalFile, technicalNote: e.target.value } })} /></Td>
-                                        <Td><Input value={newRow.technicalFile.specificationBook} onChange={(e) => setNewRow({ ...newRow, technicalFile: { ...newRow.technicalFile, specificationBook: e.target.value } })} /></Td>
+                                        <Td><Input value={newRow.technicalFile.technicalNote} onChange={(e) => setNewRow({ ...newRow, technicalFile: { ...newRow.technicalFile, technicalNote: e.target.value } })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
+                                        <Td><Input value={newRow.technicalFile.specificationBook} onChange={(e) => setNewRow({ ...newRow, technicalFile: { ...newRow.technicalFile, specificationBook: e.target.value } })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
 
-                                        <Td><Input value={newRow.submissionFile.companyStatutes} onChange={(e) => setNewRow({ ...newRow, submissionFile: { ...newRow.submissionFile, companyStatutes: e.target.value } })} /></Td>
-                                        <Td><Input value={newRow.submissionFile.authorizationDocs} onChange={(e) => setNewRow({ ...newRow, submissionFile: { ...newRow.submissionFile, authorizationDocs: e.target.value } })} /></Td>
-                                        <Td><Input value={newRow.candidateName} onChange={(e) => setNewRow({ ...newRow, candidateName: e.target.value })} /></Td>
+                                        <Td><Input value={newRow.submissionFile.companyStatutes} onChange={(e) => setNewRow({ ...newRow, submissionFile: { ...newRow.submissionFile, companyStatutes: e.target.value } })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
+                                        <Td><Input value={newRow.submissionFile.authorizationDocs} onChange={(e) => setNewRow({ ...newRow, submissionFile: { ...newRow.submissionFile, authorizationDocs: e.target.value } })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
+                                        <Td><Input value={newRow.candidateName} onChange={(e) => setNewRow({ ...newRow, candidateName: e.target.value })} size="sm" borderRadius="md" _focus={{ borderColor: "teal.500", boxShadow: "0 0 0 1px teal.500" }} /></Td>
 
                                         <Td>
-                                            <Button colorScheme="green" size="sm" onClick={() => saveRow(newRow)} mr={2}>
-                                                <FaSave color="white" size="1rem" />
-                                            </Button>
-                                            <Button colorScheme="red" size="sm" onClick={() => setNewRow(null)}>
-                                                <FaTrashAlt color="white" size="1rem" />
-                                            </Button>
+                                            <Flex gap={2}>
+                                                <Button colorScheme="green" size="sm" onClick={() => saveRow(newRow)} mr={2} _hover={{ transform: 'translateY(-1px)' }} transition="all 0.2s">
+                                                    <FaSave color="white" size="1rem" />
+                                                </Button>
+                                                <Button colorScheme="red" size="sm" onClick={() => setNewRow(null)} _hover={{ transform: 'translateY(-1px)' }} transition="all 0.2s">
+                                                    <FaTrashAlt color="white" size="1rem" />
+                                                </Button>
+                                            </Flex>
                                         </Td>
                                     </Tr>
                                 )}
@@ -346,12 +464,46 @@ const Ouverture = () => {
                     </TableContainer>
 
                     <Flex justifyContent="flex-end" p={6}>
-                        <Button colorScheme="blue" onClick={addRow} mr={4}>
+                        <Button 
+                            colorScheme="teal" 
+                            onClick={addRow} 
+                            leftIcon={<span>+</span>}
+                            _hover={{ transform: 'translateY(-1px)' }}
+                            transition="all 0.2s"
+                            boxShadow="sm"
+                        >
                             Ajouter une ligne
                         </Button>
                     </Flex>
                 </Box>
             </main>
+
+            <AlertDialog
+                isOpen={isDeleteOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={handleDeleteCancel}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            Confirmer la suppression
+                        </AlertDialogHeader>
+
+                        <AlertDialogBody>
+                            Êtes-vous sûr de vouloir supprimer cette ligne ? Cette action est irréversible.
+                        </AlertDialogBody>
+
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={handleDeleteCancel}>
+                                Annuler
+                            </Button>
+                            <Button colorScheme="red" onClick={handleDeleteConfirm} ml={3}>
+                                Supprimer
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
         </>
     );
 };

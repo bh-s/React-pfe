@@ -16,6 +16,7 @@ function Appel() {
     const [error, setError] = useState('');
     const [items, setItems] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [dateError, setDateError] = useState('');
     const bg = useColorModeValue("white");
     const history = useNavigate();
     const email = localStorage.getItem('email');
@@ -27,7 +28,22 @@ function Appel() {
         fileBase64_2: ''
     });
 
+    const validateDate = (selectedDate) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const inputDate = new Date(selectedDate);
+        return inputDate >= today;
+    };
+
     const handleChange = (e) => {
+        if (e.target.name === 'date') {
+            const isValidDate = validateDate(e.target.value);
+            if (!isValidDate) {
+                setDateError('La date doit être ultérieure ou égale à aujourd\'hui');
+            } else {
+                setDateError('');
+            }
+        }
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -60,6 +76,18 @@ function Appel() {
             setIsSubmitting(false); // Reset submitting state
             return;
         }
+        
+        // Validate date before submission
+        if (!formData.date) {
+            setError("La date est obligatoire");
+            return;
+        }
+
+        if (!validateDate(formData.date)) {
+            setError("La date doit être ultérieure ou égale à aujourd'hui");
+            return;
+        }
+
         try {
             const userData = {
                 ...formData,
@@ -231,8 +259,16 @@ function Appel() {
                                 <FormLabel fontSize={23} fontWeight={500} marginTop={14} marginBottom={10}>Lancer un Appel d'offre</FormLabel>
                                 <label className='margininput'>Titre de l'annonce</label>
                                 <input className="input2" id='input2' type="text" name="titre" placeholder="titre" onChange={handleChange} />
-                                <label className='margininput'>Dernier délaai</label>
-                                <input className="input3" type="date" name="date" placeholder="" onChange={handleChange} />
+                                <label className='margininput'>Dernier délai *</label>
+                                <input 
+                                    className={`input3 ${dateError ? 'error-input' : ''}`} 
+                                    type="date" 
+                                    name="date" 
+                                    min={new Date().toISOString().split('T')[0]}
+                                    required
+                                    onChange={handleChange} 
+                                />
+                                {dateError && <div className="error-message">{dateError}</div>}
                                 <label className='margininput'>Type</label>
                                 <select className='input3' name="type" onChange={handleChange}>
                                     <option value="">Sélectionnez un type</option>
