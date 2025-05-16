@@ -19,7 +19,7 @@ import p4 from '../../../Assets/p4.png'
 import p5 from '../../../Assets/p5.png'
 import p6 from '../../../Assets/p6.png'
 import p7 from '../../../Assets/p7.png'
-import p8 from '../../../Assets/p8.png'
+import p8 from '../../../Assets/pp.png'
 import pp from '../../../Assets/pp.png'
 import p9 from '../../../Assets/p9.png'
 import p10 from '../../../Assets/p10.png'
@@ -213,32 +213,56 @@ const Cahier_de_charge = () => {
     };
 
     const handleAddProduct = async () => {
-        if (productName.trim() !== '' && productPrice.trim() !== '' && productQuantity.trim() !== '' && numRation.trim() !== '' && titreRation.trim() !== '') {
-            const newProduct = {
-                projectName,
-                name: productName,
-                num_ration: numRation,
-                titre_ration: titreRation,
-                price: parseFloat(productPrice),
-                quantity: parseInt(productQuantity),
-                Montnt: parseFloat(productPrice) * parseInt(productQuantity)
-            };
-            try {
-                const response = await axios.post(`${import.meta.env.VITE_API_URL}/save`, newProduct);
-                if (response.status === 201) {
-                    fetchProducts();
-                    setProductName('');
-                    setProductPrice('');
-                    setProductQuantity('');
-                    setNumRation('');
-                    settitreRation('');
-                    setShowInputFields(false);
-                }
-            } catch (error) {
-                console.error("Failed to add product:", error);
+        // Check if we have all required fields
+        if (productName.trim() !== '' && productPrice.trim() !== '' && productQuantity.trim() !== '') {
+            let finalTitreRation = titreRation;
+            let finalNumRation = numRation;
+
+            // Get the text value from input if 'new' was selected
+            const titreInput = document.querySelector('input[placeholder="Enter new lot name"]');
+            const numInput = document.querySelector('input[placeholder="Enter new N° DE LOT"]');
+
+            if (titreRation === 'new' && titreInput) {
+                finalTitreRation = titreInput.value;
             }
+            if (numRation === 'new' && numInput) {
+                finalNumRation = numInput.value;
+            }
+
+            // Proceed only if we have valid lot information
+            if (finalTitreRation && finalNumRation) {
+                const newProduct = {
+                    projectName,
+                    name: productName,
+                    num_ration: finalNumRation,
+                    titre_ration: finalTitreRation,
+                    price: parseFloat(productPrice),
+                    quantity: parseInt(productQuantity),
+                    Montnt: parseFloat(productPrice) * parseInt(productQuantity)
+                };
+
+                try {
+                    const response = await axios.post(`${import.meta.env.VITE_API_URL}/save`, newProduct);
+                    if (response.status === 201) {
+                        await fetchProducts(); // Refresh the products list
+                        setProductName('');
+                        setProductPrice('');
+                        setProductQuantity('');
+                        setNumRation('');
+                        settitreRation('');
+                        setShowInputFields(false);
+                    }
+                } catch (error) {
+                    console.error("Failed to add product:", error);
+                }
+            } else {
+                alert("Please provide both LOT and N° DE LOT values");
+            }
+        } else {
+            alert("Please fill in all required fields");
         }
     };
+
     const calculateTotalAmount = () => {
         let totalAmount = 0;
         products.forEach(product => {
@@ -330,33 +354,6 @@ const Cahier_de_charge = () => {
                 <View style={[styles.line, styles.rightLine]} />
             </Page>
             <Page style={[styles.page, { border: "2px", borderColor: "black" }]}>
-                <View style={styles.section}>
-                    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}> الامانة العامة - مكتب الصفقات - كلية العلوم الدقيقة و الاعلام الالي </Text>
-                    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>{projectName}</Text>
-                    <View style={styles.titleLine} />
-                    <Text style={[styles.title, { fontWeight: '900', fontFamily: 'Vazirmatn', marginTop: '10px', color: "black", marginBottom: "30px" }]}> جامعة حسبية بن بوعلي الشلف </Text>
-                    <Text style={[styles.title, { fontWeight: '900', fontFamily: 'Vazirmatn', color: "black", fontSize: "12px", marginBottom: "20px" }]}> الامانة العامة </Text>
-                    <Text style={[styles.title, { fontWeight: '900', fontFamily: 'Vazirmatn', color: "black", fontSize: "12px", marginBottom: "2px" }]}>  044 35 49 64 :هاتف/ فاكس  </Text>
-                    <Text style={[styles.title, { fontWeight: '900', fontFamily: 'Vazirmatn', marginTop: '3px', backgroundColor: "#dddddd", fontSize: "20px" }]}> تعليمات المتعهدين </Text>
-                    <Text style={[styles.titrearticle, { fontWeight: '900', fontFamily: 'Vazirmatn', marginTop: '0' }]}> المادة01 : موضوع الاستشارة  </Text>
-                    <Text style={[styles.title, { fontWeight: '900', fontFamily: 'Vazirmatn', marginTop: '0', fontSize: "16px", color: "black", textAlign: "center" }]}> {"\n"} : يتمثل موضوع هذه الاستشارة في  </Text>
-                    {products.map((product, index) => (
-                        <View key={index}>
-                            {index === 0 || product.titre_ration !== products[index - 1].titre_ration ? (
-                                <>
-                                    <Text style={[{ fontWeight: '900', fontFamily: 'Vazirmatn', textAlign: 'right', direction: 'rtl', color: "black", fontSize: "20px" }]}>
-                                        رقم الحصة {product.num_ration} : {product.titre_ration}
-                                    </Text>                              </>
-                            ) : null}
-                        </View>
-                    ))}
-                </View>
-                <View style={styles.bottomLine} />
-                <View style={[styles.line, styles.topLine]} />
-                <View style={[styles.line, styles.leftLine]} />
-                <View style={[styles.line, styles.rightLine]} />
-            </Page>
-            <Page style={[styles.page]}>
                 <View style={styles.section}>
                     <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}> الامانة العامة - مكتب الصفقات - كلية العلوم الدقيقة و الاعلام الالي </Text>
                     <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>{projectName}</Text>
@@ -1319,46 +1316,22 @@ const Cahier_de_charge = () => {
                                     <tr>
                                         <td style={{ width: '41.4px' }}>{products.length + 1}</td>
                                         <td>
-                                            <select 
+                                            <input
+                                                type="text"
+                                                placeholder="LOT"
                                                 value={titreRation}
                                                 onChange={(e) => settitreRation(e.target.value)}
                                                 style={{ width: '100%' }}
-                                            >
-                                                <option value="">Select or add new lot</option>
-                                                {existingLots.map((lot, index) => (
-                                                    <option key={index} value={lot}>{lot}</option>
-                                                ))}
-                                                <option value="new">+ Add New Lot</option>
-                                            </select>
-                                            {titreRation === 'new' && (
-                                                <input
-                                                    type="text"
-                                                    placeholder="Enter new lot name"
-                                                    onChange={(e) => settitreRation(e.target.value)}
-                                                    style={{ width: '100%', marginTop: '5px' }}
-                                                />
-                                            )}
+                                            />
                                         </td>
                                         <td>
-                                            <select 
+                                            <input
+                                                type="text"
+                                                placeholder="N° DE LOT"
                                                 value={numRation}
                                                 onChange={(e) => setNumRation(e.target.value)}
                                                 style={{ width: '100%' }}
-                                            >
-                                                <option value="">Select or add new N° DE LOT</option>
-                                                {existingLotNumbers.map((num, index) => (
-                                                    <option key={index} value={num}>{num}</option>
-                                                ))}
-                                                <option value="new">+ Add New N° DE LOT</option>
-                                            </select>
-                                            {numRation === 'new' && (
-                                                <input
-                                                    type="text"
-                                                    placeholder="Enter new N° DE LOT"
-                                                    onChange={(e) => setNumRation(e.target.value)}
-                                                    style={{ width: '100%', marginTop: '5px' }}
-                                                />
-                                            )}
+                                            />
                                         </td>
                                         <td>
                                             <input
@@ -1381,7 +1354,7 @@ const Cahier_de_charge = () => {
                                         <td>
                                             <input
                                                 type="text"
-                                                placeholder="Prix"
+                                                placeholder="PU HT"
                                                 value={productPrice}
                                                 onChange={(e) => setProductPrice(e.target.value)}
                                                 style={{ width: '100%' }}
@@ -1390,7 +1363,7 @@ const Cahier_de_charge = () => {
                                         <td>
                                             <input
                                                 type="text"
-                                                placeholder="Montnt"
+                                                placeholder="Montant"
                                                 value={productPrice * productQuantity}
                                                 readOnly
                                                 style={{ width: '104px' }}
