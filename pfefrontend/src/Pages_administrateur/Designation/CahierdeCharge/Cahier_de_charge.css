@@ -31,11 +31,12 @@ tr:nth-child(even) {
     background-color: #3e56dee7;
     color: #ffffff;
     border: none;
-    padding: 7px;
+    padding: 8px 16px;
     border-radius: 5px;
     cursor: pointer;
     width: auto;
     margin-top: 8px;
+    font-size: 14px;
 }
 
 .pdfButton:hover {
