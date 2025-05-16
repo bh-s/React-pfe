@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { NavLink, useLocation } from 'react-router-dom';
 import { ArrowRightIcon } from '@chakra-ui/icons';
-import { FaTrashAlt } from 'react-icons/fa';
+import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 import { Box, useColorModeValue, Flex } from '@chakra-ui/react';
 import { PDFDownloadLink, Page, Text, View, Document, StyleSheet, Font, Image } from '@react-pdf/renderer';
 import Sidebar from '../../../components/Sidebar/sidebar';
@@ -63,6 +63,10 @@ const Cahier_de_charge = () => {
     const [existingLots, setExistingLots] = useState([]);
     const [existingLotNumbers, setExistingLotNumbers] = useState([]);
     const [selectedLotFilter, setSelectedLotFilter] = useState('all');
+    const [newLotName, setNewLotName] = useState('');
+    const [isAddingNewLot, setIsAddingNewLot] = useState(false);
+    const [isAddingNewLotNumber, setIsAddingNewLotNumber] = useState(false);
+    const [newLotNumber, setNewLotNumber] = useState('');
     useEffect(() => {
         fetchProducts();
 
@@ -201,65 +205,67 @@ const Cahier_de_charge = () => {
     };
 
     const handleDeleteProduct = async (productId) => {
-        try {
-            await axios.delete(`${import.meta.env.VITE_API_URL}/data/${productId}`);
-            const updatedProducts = products.filter(product => product._id !== productId);
-            setProducts(updatedProducts);
-            autoSave(productId);
-
-        } catch (error) {
-            console.error("Failed to delete product:", error);
+        // Show confirmation dialog
+        if (window.confirm("Are you sure you want to delete this product?")) {
+            try {
+                await axios.delete(`${import.meta.env.VITE_API_URL}/data/${productId}`);
+                const updatedProducts = products.filter(product => product._id !== productId);
+                setProducts(updatedProducts);
+                autoSave(productId);
+            } catch (error) {
+                console.error("Failed to delete product:", error);
+            }
         }
     };
 
     const handleAddProduct = async () => {
-        // Check if we have all required fields
         if (productName.trim() !== '' && productPrice.trim() !== '' && productQuantity.trim() !== '') {
-            let finalTitreRation = titreRation;
-            let finalNumRation = numRation;
+            const lotName = isAddingNewLot ? newLotName : titreRation;
+            const lotNumber = isAddingNewLotNumber ? newLotNumber : numRation;
+            const newProduct = {
+                projectName,
+                name: productName,
+                num_ration: lotNumber,
+                titre_ration: lotName,
+                price: parseFloat(productPrice),
+                quantity: parseInt(productQuantity),
+                Montnt: parseFloat(productPrice) * parseInt(productQuantity)
+            };
 
-            // Get the text value from input if 'new' was selected
-            const titreInput = document.querySelector('input[placeholder="Enter new lot name"]');
-            const numInput = document.querySelector('input[placeholder="Enter new N° DE LOT"]');
-
-            if (titreRation === 'new' && titreInput) {
-                finalTitreRation = titreInput.value;
-            }
-            if (numRation === 'new' && numInput) {
-                finalNumRation = numInput.value;
-            }
-
-            // Proceed only if we have valid lot information
-            if (finalTitreRation && finalNumRation) {
-                const newProduct = {
-                    projectName,
-                    name: productName,
-                    num_ration: finalNumRation,
-                    titre_ration: finalTitreRation,
-                    price: parseFloat(productPrice),
-                    quantity: parseInt(productQuantity),
-                    Montnt: parseFloat(productPrice) * parseInt(productQuantity)
-                };
-
-                try {
-                    const response = await axios.post(`${import.meta.env.VITE_API_URL}/save`, newProduct);
-                    if (response.status === 201) {
-                        await fetchProducts(); // Refresh the products list
-                        setProductName('');
-                        setProductPrice('');
-                        setProductQuantity('');
-                        setNumRation('');
-                        settitreRation('');
-                        setShowInputFields(false);
-                    }
-                } catch (error) {
-                    console.error("Failed to add product:", error);
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/save`, newProduct);
+                if (response.status === 201) {
+                    await fetchProducts();
+                    setProductName('');
+                    setProductPrice('');
+                    setProductQuantity('');
+                    setNumRation('');
+                    settitreRation('');
+                    setShowInputFields(false);
                 }
-            } else {
-                alert("Please provide both LOT and N° DE LOT values");
+            } catch (error) {
+                console.error("Failed to add product:", error);
             }
         } else {
             alert("Please fill in all required fields");
+        }
+    };
+
+    const handleModifyProduct = async (productId) => {
+        if (window.confirm("Are you sure you want to modify this product?")) {
+            try {
+                const productToModify = products.find(product => product._id === productId);
+                setProductName(productToModify.name);
+                setProductPrice(productToModify.price);
+                setProductQuantity(productToModify.quantity);
+                setNumRation(productToModify.num_ration);
+                settitreRation(productToModify.titre_ration);
+                setShowInputFields(true);
+                // Remove the old product
+                await handleDeleteProduct(productId);
+            } catch (error) {
+                console.error("Failed to modify product:", error);
+            }
         }
     };
 
@@ -415,8 +421,7 @@ const Cahier_de_charge = () => {
                     <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}> الامانة العامة - مكتب الصفقات - كلية العلوم الدقيقة و الاعلام الالي </Text>
                     <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '11px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>{projectName}</Text>
                     <View style={styles.titleLine} />
-                    <Text style={styles.titrearticle}>:ب- يحتوي ملف العرض التقني على</Text>
-                    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}> مذكرة تقنية تبريرية * {'\n'}: ينبغي ان تتضمن المذكرة التقنية التبريرية باختصار العناصر الآتية</Text>
+                    <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}> {'\n'} مذكرة تقنية تبريرية * {'\n'}: ينبغي ان تتضمن المذكرة التقنية التبريرية باختصار العناصر الآتية</Text>
                     <Text style={[styles.title, { fontFamily: 'Vazirmatn', fontSize: '13px', color: 'black', textAlign: 'right', marginBottom: "1px" }]}>
                         {'\n'}. (الاسم، إسم الشركة...) لمحة عامة عن الشركة -
                         {'\n'} . المخطط التقديري والإجراءات التي تتخذها المؤسسة لاحترام الآجال-
@@ -1236,18 +1241,42 @@ const Cahier_de_charge = () => {
                                             onKeyDown={(e) => handleKeyDown(e, product._id)}
                                             style={{ width: '100%', minHeight: 'auto', overflowY: 'hidden', border: 'none', resize: "none", outline: "none" }}
                                         /></td>
-                                        <td><textarea
-                                            ref={NumRationRef}
-                                            placeholder="N DE LOT"
-                                            value={product.num_ration}
-                                            onChange={(e) => {
-                                                setNumRation(e.target.value);
-                                                handleNumRationChange(e, product._id);
-                                            }}
-                                            onBlur={() => autoSave(product._id)}
-                                            onKeyDown={(e) => handleKeyDown(e, product._id)}
-                                            style={{ width: '100%', minHeight: 'auto', overflowY: 'hidden', border: 'none', resize: "none", outline: "none" }}
-                                        /></td>
+                                        <td>
+                                            <select 
+                                                value={isAddingNewLotNumber ? 'new' : numRation}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value === 'new') {
+                                                        setIsAddingNewLotNumber(true);
+                                                        setNumRation('');
+                                                        setNewLotNumber('');
+                                                    } else {
+                                                        setIsAddingNewLotNumber(false);
+                                                        setNumRation(value);
+                                                    }
+                                                }}
+                                                style={{ width: '100%', padding: '5px' }}
+                                            >
+                                                <option value="">Select N° DE LOT</option>
+                                                {existingLotNumbers.map((num, index) => (
+                                                    <option key={index} value={num}>{num}</option>
+                                                ))}
+                                                <option value="new">+ Add New N° DE LOT</option>
+                                            </select>
+                                            {isAddingNewLotNumber && (
+                                                <input
+                                                    type="text"
+                                                    placeholder="Enter new N° DE LOT"
+                                                    value={newLotNumber}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        setNewLotNumber(value);
+                                                        setNumRation(value);
+                                                    }}
+                                                    style={{ width: '100%', marginTop: '5px' }}
+                                                />
+                                            )}
+                                        </td>
                                         <td>
                                             <textarea
                                                 ref={productNameRef}
@@ -1297,8 +1326,31 @@ const Cahier_de_charge = () => {
                                             />
                                         </td>
                                         <td ><textarea style={{ width: '100%', minHeight: 'auto', overflowY: 'hidden', border: 'none', resize: "none", outline: 'none' }}>{product.price * product.quantity}</textarea></td>
-                                        <td>
-                                            <button style={{ color: 'red', fontSize: '1.2rem', marginLeft: '9px', marginBottom: '-7px', background: 'none', border: 'none', cursor: 'pointer' }} onClick={() => handleDeleteProduct(product._id)}>  <FaTrashAlt /></button>
+                                        <td style={{ display: 'flex', gap: '10px' }}>
+                                            <button 
+                                                style={{ 
+                                                    color: '#4299E1', 
+                                                    fontSize: '1.2rem',
+                                                    background: 'none', 
+                                                    border: 'none', 
+                                                    cursor: 'pointer' 
+                                                }} 
+                                                onClick={() => handleModifyProduct(product._id)}
+                                            >  
+                                                <FaEdit />
+                                            </button>
+                                            <button 
+                                                style={{ 
+                                                    color: 'red', 
+                                                    fontSize: '1.2rem',
+                                                    background: 'none', 
+                                                    border: 'none', 
+                                                    cursor: 'pointer' 
+                                                }} 
+                                                onClick={() => handleDeleteProduct(product._id)}
+                                            >  
+                                                <FaTrashAlt />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -1316,22 +1368,76 @@ const Cahier_de_charge = () => {
                                     <tr>
                                         <td style={{ width: '41.4px' }}>{products.length + 1}</td>
                                         <td>
-                                            <input
-                                                type="text"
-                                                placeholder="LOT"
-                                                value={titreRation}
-                                                onChange={(e) => settitreRation(e.target.value)}
-                                                style={{ width: '100%' }}
-                                            />
+                                            <select 
+                                                value={isAddingNewLot ? 'new' : titreRation}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value === 'new') {
+                                                        setIsAddingNewLot(true);
+                                                        settitreRation('');
+                                                        setNewLotName('');
+                                                    } else {
+                                                        setIsAddingNewLot(false);
+                                                        settitreRation(value);
+                                                    }
+                                                }}
+                                                style={{ width: '100%', padding: '5px' }}
+                                            >
+                                                <option value="">Select lot</option>
+                                                {existingLots.map((lot, index) => (
+                                                    <option key={index} value={lot}>{lot}</option>
+                                                ))}
+                                                <option value="new">+ Add New Lot</option>
+                                            </select>
+                                            {isAddingNewLot && (
+                                                <input
+                                                    type="text"
+                                                    placeholder="Enter new lot name"
+                                                    value={newLotName}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        setNewLotName(value);
+                                                        settitreRation(value);
+                                                    }}
+                                                    style={{ width: '100%', marginTop: '5px' }}
+                                                />
+                                            )}
                                         </td>
                                         <td>
-                                            <input
-                                                type="text"
-                                                placeholder="N° DE LOT"
-                                                value={numRation}
-                                                onChange={(e) => setNumRation(e.target.value)}
-                                                style={{ width: '100%' }}
-                                            />
+                                            <select 
+                                                value={isAddingNewLotNumber ? 'new' : numRation}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value === 'new') {
+                                                        setIsAddingNewLotNumber(true);
+                                                        setNumRation('');
+                                                        setNewLotNumber('');
+                                                    } else {
+                                                        setIsAddingNewLotNumber(false);
+                                                        setNumRation(value);
+                                                    }
+                                                }}
+                                                style={{ width: '100%', padding: '5px' }}
+                                            >
+                                                <option value="">Select N° DE LOT</option>
+                                                {existingLotNumbers.map((num, index) => (
+                                                    <option key={index} value={num}>{num}</option>
+                                                ))}
+                                                <option value="new">+ Add New N° DE LOT</option>
+                                            </select>
+                                            {isAddingNewLotNumber && (
+                                                <input
+                                                    type="text"
+                                                    placeholder="Enter new N° DE LOT"
+                                                    value={newLotNumber}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        setNewLotNumber(value);
+                                                        setNumRation(value);
+                                                    }}
+                                                    style={{ width: '100%', marginTop: '5px' }}
+                                                />
+                                            )}
                                         </td>
                                         <td>
                                             <input
