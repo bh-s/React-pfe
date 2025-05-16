@@ -1,6 +1,13 @@
-import React, { useState, useEffect, useMemo } from "react"
-import { useParams } from "react-router-dom"
+import React, { useState, useEffect, useMemo, useRef } from "react"
 import {
+  Box,
+  Button,
+  Input,
+  Flex,
+  Text,
+  useToast,
+  useDisclosure,
+  Badge,
   Table,
   Thead,
   Tbody,
@@ -9,22 +16,21 @@ import {
   Th,
   Td,
   TableContainer,
-  Box,
-  Button,
-  Input,
-  Flex,
-  Text,
-  useToast,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  useDisclosure,
-  Badge,
+  Heading,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  SimpleGrid,
+  Icon,
+  VStack,
+  useColorModeValue,
+  Container,
+  Progress,
 } from "@chakra-ui/react"
+import { useParams } from "react-router-dom"
 import axios from "axios"
+import { FiPlus, FiSave, FiUsers, FiDollarSign, FiClock, FiShield, FiAward, FiTrendingUp } from "react-icons/fi"
 
 const DynamicTable = () => {
   const toast = useToast()
@@ -44,7 +50,7 @@ const DynamicTable = () => {
     }),
   )
 
-  const initialColumns = 2 + initialGroupCount * 2
+  const initialColumns = 4 + initialGroupCount * 2
   const [tableData, setTableData] = useState(
     Array(3)
       .fill(null)
@@ -52,7 +58,7 @@ const DynamicTable = () => {
   )
   const [isSaving, setIsSaving] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const cancelRef = React.useRef()
+  const cancelRef = useRef()
 
   const [projectName, setProjectName] = useState(useParams().projectName || "")
   const location = window.location
@@ -64,6 +70,11 @@ const DynamicTable = () => {
     duration: "",
     guarantees: "",
   })
+
+  const cardBg = useColorModeValue("white", "gray.700")
+  const borderColor = useColorModeValue("gray.200", "gray.600")
+  const headerBg = useColorModeValue("blue.50", "blue.900")
+  const accentColor = useColorModeValue("blue.500", "blue.300")
 
   const calculatedPoints = useMemo(() => {
     if (suppliers.length === 0) return []
@@ -130,8 +141,16 @@ const DynamicTable = () => {
   }, [calculatedPoints])
 
   const addRow = () => {
-    const newRow = Array(2 + groupCount * 2).fill("")
+    const newRow = Array(4 + groupCount * 2).fill("")
     setTableData([...tableData, newRow])
+
+    toast({
+      title: "Row added",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+      position: "top-right",
+    })
   }
 
   const addGroup = () => {
@@ -149,6 +168,14 @@ const DynamicTable = () => {
         duree_garantie: "",
       },
     ])
+
+    toast({
+      title: "Supplier added",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+      position: "top-right",
+    })
   }
 
   const fetchProducts = async () => {
@@ -166,6 +193,7 @@ const DynamicTable = () => {
               setGroupCount(response.data[0].suppliers.length)
             }
           }
+          console.log('ne')
         } else {
           setProducts(response.data.products || [])
           setProjectId(response.data._id)
@@ -209,28 +237,40 @@ const DynamicTable = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const projectNameFromQuery = new URLSearchParams(location.search).get("project");
-      setProjectName(projectNameFromQuery || projectName);
+      const projectNameFromQuery = new URLSearchParams(location.search).get("project")
+      setProjectName(projectNameFromQuery || projectName)
 
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/data?projectName=${projectNameFromQuery || projectName}`,
-        );
+        )
 
-        console.log("Raw API response:", response.data);
+        console.log("Raw API response:", response.data)
 
         if (response.data && Array.isArray(response.data)) {
           const newTableData = response.data.map((product) => {
-            const row = Array(2 + groupCount * 2).fill("");
+            // Create a row with 4 base columns + supplier columns
+            const row = Array(4 + groupCount * 2).fill("")
 
-            row[0] = product.titre_ration || "";
-            row[1] = product.quantity ? String(product.quantity) : "";
+            row[0] = product.num_ration ? String(product.num_ration) : ""
+            row[1] = product.titre_ration
+            row[2] = product.name
+            row[3] = product.quantity
 
-            return row;
-          });
+            if (product.suppliers && product.suppliers.length > 0) {
+              product.suppliers.forEach((supplier, index) => {
+                if (index < groupCount) {
+                  row[4 + index * 2] = supplier.unitPrice || ""
+                  row[5 + index * 2] = supplier.totalPrice || ""
+                }
+              })
+            }
 
-          setTableData(newTableData.length > 0 ? newTableData : tableData);
-          console.log("Processed table data:", newTableData);
+            return row
+          })
+
+          setTableData(newTableData.length > 0 ? newTableData : tableData)
+          console.log("Processed table data:", newTableData)
         } else {
           toast({
             title: "Info",
@@ -238,46 +278,22 @@ const DynamicTable = () => {
             status: "info",
             duration: 3000,
             isClosable: true,
-          });
+          })
         }
       } catch (error) {
-        console.error("Error fetching products from /data:", error);
+        console.error("Error fetching products from /data:", error)
         toast({
           title: "Error",
           description: "Failed to fetch products from data endpoint",
           status: "error",
           duration: 3000,
           isClosable: true,
-        });
-      }
-    };
-
-    fetchData();
-  }, []);
-
-
-  const debugApiData = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/data?projectName=${projectName}`)
-      console.log("API Data Structure:", response.data)
-
-      if (response.data && response.data.length > 0) {
-        const firstItem = response.data[0]
-        console.log("First item keys:", Object.keys(firstItem))
-        console.log("First item values:", Object.values(firstItem))
-
-        toast({
-          title: "Debug Info",
-          description: `First item keys: ${Object.keys(firstItem).join(", ")}`,
-          status: "info",
-          duration: 5000,
-          isClosable: true,
         })
       }
-    } catch (error) {
-      console.error("Debug error:", error)
     }
-  }
+
+    fetchData()
+  }, [])
 
   const validateData = (data) => {
     if (!data.projectName) {
@@ -315,11 +331,13 @@ const DynamicTable = () => {
       const formattedData = {
         projectName: projectName || "default",
         products: tableData.map((row) => ({
-          titre_ration: row[0],
-          quantity: Number.parseFloat(row[1]) || 0,
+          num_ration: Number.parseInt(row[0]) || 0,
+          titre_ration: row[1] || "",
+          name: row[2] || "",
+          quantity: Number.parseFloat(row[3]) || 0,
           suppliers: Array.from({ length: groupCount }).map((_, index) => ({
-            unitPrice: Number.parseFloat(row[2 + index * 2]) || 0,
-            totalPrice: Number.parseFloat(row[3 + index * 2]) || 0,
+            unitPrice: Number.parseFloat(row[4 + index * 2]) || 0,
+            totalPrice: Number.parseFloat(row[5 + index * 2]) || 0,
           })),
         })),
         suppliers: updatedSuppliers.map((supplier) => ({
@@ -350,11 +368,14 @@ const DynamicTable = () => {
           headers: {
             "Content-Type": "application/json",
           },
+
         })
+
 
         if (response.data && response.data._id) {
           setProjectId(response.data._id)
         }
+
       }
 
       console.log("Server response:", response.data)
@@ -365,6 +386,7 @@ const DynamicTable = () => {
         status: "success",
         duration: 3000,
         isClosable: true,
+        position: "top-right",
       })
     } catch (error) {
       console.error("Error saving data:", error)
@@ -389,6 +411,7 @@ const DynamicTable = () => {
         status: "error",
         duration: 5000,
         isClosable: true,
+        position: "top-right",
       })
     } finally {
       setIsSaving(false)
@@ -404,15 +427,17 @@ const DynamicTable = () => {
   useEffect(() => {
     if (products && products.length > 0) {
       const newData = products.map((product) => {
-        const row = Array(2 + groupCount * 2).fill("")
-        row[0] = product.titre_ration || ""
-        row[1] = product.quantity || ""
+        const row = Array(4 + groupCount * 2).fill("")
+        row[0] = product.num_ration
+        row[1] = product.titre_ration
+        row[2] = product.name
+        row[3] = product.quantity
 
         if (product.suppliers && product.suppliers.length > 0) {
           product.suppliers.forEach((supplier, index) => {
             if (index < groupCount) {
-              row[2 + index * 2] = supplier.unitPrice || ""
-              row[3 + index * 2] = supplier.totalPrice || ""
+              row[4 + index * 2] = supplier.unitPrice || ""
+              row[5 + index * 2] = supplier.totalPrice || ""
             }
           })
         }
@@ -427,16 +452,16 @@ const DynamicTable = () => {
     const newData = [...tableData]
     newData[rowIndex][colIndex] = value
 
-    if (colIndex === 1) {
+    if (colIndex === 3) {
       const globalQuantity = Number.parseFloat(value) || 0
       for (let groupIndex = 0; groupIndex < groupCount; groupIndex++) {
-        const unitPriceIndex = 2 + groupIndex * 2
+        const unitPriceIndex = 4 + groupIndex * 2
         const totalPriceIndex = unitPriceIndex + 1
         const unitPrice = Number.parseFloat(newData[rowIndex][unitPriceIndex]) || 0
         newData[rowIndex][totalPriceIndex] = (globalQuantity * unitPrice).toFixed(2)
       }
-    } else if (colIndex >= 2 && (colIndex - 2) % 2 === 0) {
-      const globalQuantity = Number.parseFloat(newData[rowIndex][1]) || 0
+    } else if (colIndex >= 4 && (colIndex - 4) % 2 === 0) {
+      const globalQuantity = Number.parseFloat(newData[rowIndex][3]) || 0
       const unitPrice = Number.parseFloat(value) || 0
       const totalPriceIndex = colIndex + 1
       newData[rowIndex][totalPriceIndex] = (globalQuantity * unitPrice).toFixed(2)
@@ -454,26 +479,23 @@ const DynamicTable = () => {
   }
 
   useEffect(() => {
-    // Calculate totals (HT) for each supplier
     const newTotals = Array.from({ length: groupCount }).map((_, groupIndex) => {
       return tableData
         .reduce((acc, row) => {
-          const totalPriceIndex = 2 + groupIndex * 2 + 1
+          const totalPriceIndex = 4 + groupIndex * 2 + 1
           const cellValue = Number.parseFloat(row[totalPriceIndex]) || 0
           return acc + cellValue
         }, 0)
         .toFixed(2)
     })
     setTotals(newTotals)
-    
-    // Calculate TVA (19% of totals)
-    const newTotalsTVA = newTotals.map(total => {
+
+    const newTotalsTVA = newTotals.map((total) => {
       const totalValue = Number.parseFloat(total) || 0
       return (totalValue * 0.19).toFixed(2)
     })
     setTotalsTVA(newTotalsTVA)
-    
-    // Calculate TTC (total + TVA)
+
     const newTotalsTTC = newTotals.map((total, index) => {
       const totalValue = Number.parseFloat(total) || 0
       const tvaValue = Number.parseFloat(newTotalsTVA[index]) || 0
@@ -489,261 +511,349 @@ const DynamicTable = () => {
     return "gray"
   }
 
+  const getProgressColor = (rank) => {
+    if (rank === 1) return "green.400"
+    if (rank === 2) return "blue.400"
+    if (rank === 3) return "yellow.400"
+    return "gray.400"
+  }
+
   return (
-    <Box p={6}>
-      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Duplicate Project
-            </AlertDialogHeader>
+    <Container maxW="container.xl" py={6}>
 
-            <AlertDialogBody>
-              A project with this name already exists. Would you like to update the existing project?
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button
-                colorScheme="blue"
-                onClick={() => {
-                  onClose()
-                  fetchProducts() // Fetch the existing project data
-                }}
-                ml={3}
-              >
-                Yes, Update Existing
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-
-      <TableContainer border="1px" borderColor="gray.200" mb={4}>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th rowSpan={2} textAlign="center">
-                <Text mt={2} fontSize="lg" fontWeight="bold">اللوازم</Text>
-              </Th>
-              <Th rowSpan={2} textAlign="center">
-                <Text mt={2} fontSize="lg" fontWeight="bold">الكمية</Text>
-              </Th>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <Th key={groupIndex} colSpan={2} textAlign="center">
-                  <Input
-                    border="1px solid gray"
-                    placeholder="Fournisseur"
-                    mt={2}
-                    value={suppliers[groupIndex].titre_ration}
-                    onChange={(e) => handleSupplierChange(groupIndex, "name", e.target.value)}
-                  />
-                </Th>
-              ))}
-            </Tr>
-            <Tr>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Th textAlign="center">
-                    <Text fontSize="lg" fontWeight="bold">السعر الوحدوي(دج)</Text>
+      <Card bg={cardBg} shadow="lg" borderRadius="lg" mb={8}>
+        <CardHeader bg={headerBg} borderTopRadius="lg">
+          <Heading size="md">Product Evaluation Table</Heading>
+        </CardHeader>
+        <CardBody overflowX="auto">
+          <TableContainer>
+            <Table variant="simple" colorScheme="blue" size="sm">
+              <Thead bg={headerBg}>
+                <Tr>
+                  <Th rowSpan={2} textAlign="center">
+                    <Text fontSize="md" fontWeight="bold">
+                      رقم الحصة
+                    </Text>
                   </Th>
-                  <Th textAlign="center">
-                    <Text fontSize="lg" fontWeight="bold">السعر الكلي(دج)</Text>
+                  <Th rowSpan={2} textAlign="center">
+                    <Text fontSize="md" fontWeight="bold">
+                      اسم الحصة
+                    </Text>
                   </Th>
-                </React.Fragment>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {tableData.map((row, rowIndex) => (
-              <Tr key={rowIndex}>
-                {row.map((cell, cellIndex) => (
-                  <Td key={cellIndex}>
-                    <Input
-                      width="auto"
-                      border="1px solid gray"
-                      value={cell}
-                      onChange={(e) => handleInputChange(rowIndex, cellIndex, e.target.value)}
-                      isReadOnly={cellIndex >= 2 && (cellIndex - 2) % 2 === 1}
-                    />
-                  </Td>
+                  <Th rowSpan={2} textAlign="center">
+                    <Text fontSize="md" fontWeight="bold">
+                      اللوازم
+                    </Text>
+                  </Th>
+                  <Th rowSpan={2} textAlign="center">
+                    <Text fontSize="md" fontWeight="bold">
+                      الكمية
+                    </Text>
+                  </Th>
+                  {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                    <Th key={groupIndex} colSpan={2} textAlign="center">
+                      <Input
+                        placeholder="Fournisseur"
+                        mt={2}
+                        value={suppliers[groupIndex].name}
+                        onChange={(e) => handleSupplierChange(groupIndex, "name", e.target.value)}
+                        bg="white"
+                        borderColor={borderColor}
+                        _hover={{ borderColor: accentColor }}
+                        _focus={{ borderColor: accentColor, boxShadow: `0 0 0 1px ${accentColor}` }}
+                      />
+                    </Th>
+                  ))}
+                </Tr>
+                <Tr>
+                  {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                    <React.Fragment key={groupIndex}>
+                      <Th textAlign="center">
+                        <Text fontSize="md" fontWeight="bold">
+                          السعر الوحدوي
+                        </Text>
+                      </Th>
+                      <Th textAlign="center">
+                        <Text fontSize="md" fontWeight="bold">
+                          السعر الكلي
+                        </Text>
+                      </Th>
+                    </React.Fragment>
+                  ))}
+                </Tr>
+              </Thead>
+
+              <Tbody>
+                {tableData.map((row, rowIndex) => (
+                  <Tr key={rowIndex} _hover={{ bg: "gray.50" }}>
+                    {row.map((cell, cellIndex) => (
+                      <Td key={cellIndex}>
+                        <Input
+                          width="auto"
+                          value={cell}
+                          onChange={(e) => handleInputChange(rowIndex, cellIndex, e.target.value)}
+                          borderColor={borderColor}
+                          _hover={{ borderColor: accentColor }}
+                          _focus={{ borderColor: accentColor, boxShadow: `0 0 0 1px ${accentColor}` }}
+                          bg={cellIndex >= 2 && (cellIndex - 2) % 2 === 1 ? "gray.50" : "white"}
+                        />
+                      </Td>
+                    ))}
+                  </Tr>
                 ))}
-              </Tr>
+              </Tbody>
+              <Tfoot bg="gray.50">
+                <Tr>
+                  <Td colSpan={4} textAlign="right">
+                    <Text fontSize="md" fontWeight="bold">
+                      Montant DA (HT)
+                    </Text>
+                  </Td>
+                  {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                    <React.Fragment key={groupIndex}>
+                      <Td></Td>
+                      <Td textAlign="center">
+                        <Text fontSize="md" fontWeight="bold" color={accentColor}>
+                          {totals[groupIndex]}
+                        </Text>
+                      </Td>
+                    </React.Fragment>
+                  ))}
+                </Tr>
+                <Tr>
+                  <Td colSpan={4} textAlign="right">
+                    <Text fontSize="md" fontWeight="bold">
+                      T.V.A 19%
+                    </Text>
+                  </Td>
+                  {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                    <React.Fragment key={groupIndex}>
+                      <Td></Td>
+                      <Td textAlign="center">
+                        <Text fontSize="md" fontWeight="bold" color="gray.600">
+                          {totalsTVA[groupIndex]}
+                        </Text>
+                      </Td>
+                    </React.Fragment>
+                  ))}
+                </Tr>
+                <Tr>
+                  <Td colSpan={4} textAlign="right">
+                    <Text fontSize="md" fontWeight="bold">
+                      Montant DA (TTC)
+                    </Text>
+                  </Td>
+                  {Array.from({ length: groupCount }).map((_, groupIndex) => (
+                    <React.Fragment key={groupIndex}>
+                      <Td></Td>
+                      <Td textAlign="center">
+                        <Text fontSize="md" fontWeight="bold" color="green.600">
+                          {totalsTTC[groupIndex]}
+                        </Text>
+                      </Td>
+                    </React.Fragment>
+                  ))}
+                </Tr>
+              </Tfoot>
+            </Table>
+          </TableContainer>
+        </CardBody>
+      </Card>
+
+      <Card bg={cardBg} shadow="lg" borderRadius="lg" mb={8}>
+        <CardHeader bg={headerBg} borderTopRadius="lg">
+          <Heading size="md">Informations fournisseur</Heading>
+        </CardHeader>
+        <CardBody>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: groupCount }} spacing={6}>
+            {Array.from({ length: groupCount }).map((_, groupIndex) => (
+              <Card key={groupIndex} variant="outline">
+                <CardHeader bg={headerBg} pb={2}>
+                  <Heading textAlign={'center'} size="sm">{suppliers[groupIndex].name || `Fournisseur ${groupIndex + 1}`}</Heading>
+                </CardHeader>
+                <CardBody>
+                  <VStack spacing={4} align="stretch">
+                    <Box display={"flex"} flexDir={"column"} alignItems={"flex-end"}>
+                      <Flex align="center" mb={1}>
+                        <Text fontWeight="bold">مدة الانجاز</Text>
+                        <Icon as={FiClock} ml={2} color="blue.500" />
+                      </Flex>
+                      <Input
+                        placeholder="مدة الانجاز"
+                        textAlign="right"
+                        value={suppliers[groupIndex].duree_execution}
+                        onChange={(e) => handleSupplierChange(groupIndex, "duree_execution", e.target.value)}
+                        borderColor={borderColor}
+                        _hover={{ borderColor: accentColor }}
+                        _focus={{ borderColor: accentColor, boxShadow: `0 0 0 1px ${accentColor}` }}
+                      />
+                    </Box>
+
+                    <Box display={"flex"} flexDir={"column"} alignItems={"flex-end"}>
+                      <Flex align="center" mb={1}>
+                        <Text fontWeight="bold">مدة الضمان</Text>
+                        <Icon as={FiShield} ml={2} color="green.500" />
+
+                      </Flex>
+                      <Input
+                        placeholder="مدة الضمان"
+                        textAlign="right"
+                        value={suppliers[groupIndex].duree_garantie}
+                        onChange={(e) => handleSupplierChange(groupIndex, "duree_garantie", e.target.value)}
+                        borderColor={borderColor}
+                        _hover={{ borderColor: accentColor }}
+                        _focus={{ borderColor: accentColor, boxShadow: `0 0 0 1px ${accentColor}` }}
+                      />
+                    </Box>
+
+                    <Divider />
+
+                    <Box display={"flex"} flexDir={"column"} alignItems={"flex-end"}>
+                      <Flex align="center" mb={1}>
+                        <Text fontWeight="bold">نقطة العرض المالي</Text>
+                        <Icon as={FiDollarSign} ml={2} color="purple.500" />
+
+                      </Flex>
+                      <Input
+                        placeholder="نقطة العرض المالي"
+                        textAlign="right"
+                        value={calculatedPoints[groupIndex]?.financialPoints || "0.00"}
+                        readOnly
+                        bg="gray.50"
+                        fontWeight="bold"
+                      />
+                    </Box>
+
+                    <Box display={"flex"} flexDir={"column"} alignItems={"flex-end"}>
+                      <Flex align="center" mb={1}>
+                        <Text fontWeight="bold">نقطة مدة الانجاز</Text>
+                        <Icon as={FiClock} ml={2} color="orange.500" />
+
+                      </Flex>
+                      <Input
+                        placeholder="نقطة مدة الانجاز"
+                        textAlign="right"
+                        value={calculatedPoints[groupIndex]?.executionPoints || "0.00"}
+                        readOnly
+                        bg="gray.50"
+                        fontWeight="bold"
+                      />
+                    </Box>
+
+                    <Box display={"flex"} flexDir={"column"} alignItems={"flex-end"}>
+                      <Flex align="center" mb={1}>
+                        <Text fontWeight="bold">نقطة مدة الضمان</Text>
+                        <Icon as={FiShield} ml={2} color="teal.500" />
+
+                      </Flex>
+                      <Input
+                        placeholder="نقطة مدة الضمان"
+                        textAlign="right"
+                        value={calculatedPoints[groupIndex]?.warrantyPoints || "0.00"}
+                        readOnly
+                        bg="gray.50"
+                        fontWeight="bold"
+                      />
+                    </Box>
+
+                    <Divider />
+
+                    <Box display={"flex"} flexDir={"column"} alignItems={"flex-end"}>
+                      <Flex mb={1}>
+                        <Text fontWeight="bold" >النقطة النهائية</Text>
+                        <Icon as={FiAward} ml={2} color="red.500" />
+
+                      </Flex>
+                      <Input
+                        placeholder="النقطة النهائية"
+                        textAlign="right"
+                        value={calculatedPoints[groupIndex]?.totalPoints || "0.00"}
+                        readOnly
+                        bg="gray.50"
+                        fontWeight="bold"
+                        color={getProgressColor(rankings[groupIndex])}
+                      />
+                    </Box>
+
+                    <Box display={"flex"} flexDir={"column"} alignItems={"flex-end"}>
+                      <Flex align="center" mb={1}>
+                        <Icon as={FiTrendingUp} mr={2} color="blue.500" />
+                        <Text fontWeight="bold">الترتيب</Text>
+                      </Flex>
+                      <Flex>
+                        <Input
+                          placeholder="الترتيب"
+                          textAlign="right"
+                          value={rankings[groupIndex] || ""}
+                          readOnly
+                          mr={2}
+                          bg="gray.50"
+                        />
+                        {rankings[groupIndex] && (
+                          <Badge
+                            colorScheme={getRankColor(rankings[groupIndex])}
+                            fontSize="xl"
+                            p={2}
+                            borderRadius="md"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            minW="40px"
+                          >
+                            {rankings[groupIndex]}
+                          </Badge>
+                        )}
+                      </Flex>
+                    </Box>
+                  </VStack>
+                </CardBody>
+              </Card>
             ))}
-          </Tbody>
-          <Tfoot>
-            <Tr>
-              <Td></Td>
-              <Td></Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td textAlign="right">
-                    <Text fontSize="lg" fontWeight="bold">العرض المالي "المجموع"(دج)</Text>
-                  </Td>
-                  <Td textAlign="center">
-                    <Text fontSize="lg" fontWeight="bold">{totals[groupIndex]}</Text>
-                  </Td>
-                </React.Fragment>
-              ))}
-            </Tr>
-            {/* New rows for Montant DA (HT), TVA, and TTC */}
-            <Tr>
-              <Td colSpan={2} textAlign="right">
-                <Text fontSize="lg" fontWeight="bold">Montant DA (HT)</Text>
-              </Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td></Td>
-                  <Td textAlign="center">
-                    <Text fontSize="lg" fontWeight="bold">{totals[groupIndex]}</Text>
-                  </Td>
-                </React.Fragment>
-              ))}
-            </Tr>
-            <Tr>
-              <Td colSpan={2} textAlign="right">
-                <Text fontSize="lg" fontWeight="bold">T.V.A 19%</Text>
-              </Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td></Td>
-                  <Td textAlign="center">
-                    <Text fontSize="lg" fontWeight="bold">{totalsTVA[groupIndex]}</Text>
-                  </Td>
-                </React.Fragment>
-              ))}
-            </Tr>
-            <Tr>
-              <Td colSpan={2} textAlign="right">
-                <Text fontSize="lg" fontWeight="bold">Montant DA (TTC)</Text>
-              </Td>
-              {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                <React.Fragment key={groupIndex}>
-                  <Td></Td>
-                  <Td textAlign="center">
-                    <Text fontSize="lg" fontWeight="bold">{totalsTTC[groupIndex]}</Text>
-                  </Td>
-                </React.Fragment>
-              ))}
-            </Tr>
-            <Tr>
-              <Td></Td>
-              <Td></Td>
-                            {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                              <React.Fragment key={groupIndex}>
-                                <Td textAlign="right">
-                                  <Flex flexDir="column">
-                                    <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة مدة الضمان</label>
-              
-                                    <Input
-                                      border="1px solid gray"
-                                      placeholder="نقطة مدة الانجاز"
-                                      textAlign="right"
-                                      value={calculatedPoints[groupIndex]?.executionPoints || "0.00"}
-                                      readOnly
-                                      fontSize="lg"
-                                      height="2.5rem"
-                                      bg="gray.50"
-                                      fontWeight="bold"
-                                    />
-              
-                                  </Flex>
-                                </Td>
-                                <Td></Td>
-                              </React.Fragment>
-                            ))}
-                          </Tr>
-                          <Tr>
-                            <Td></Td>
-                            <Td></Td>
-                            {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                              <React.Fragment key={groupIndex}>
-                                <Td textAlign="right">
-                                  <Flex flexDir="column">
-                                    <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة العرض المالي</label>
-              
-                                    <Input
-                                      border="1px solid gray"
-                                      placeholder="نقطة مدة الضمان"
-                                      textAlign="right"
-                                      value={calculatedPoints[groupIndex]?.warrantyPoints || "0.00"}
-                                      readOnly
-                                      fontSize="lg"
-                                      height="2.5rem"
-                                      bg="gray.50"
-                                      fontWeight="bold"
-                                    />
-              
-                                  </Flex>
-                                </Td>
-                                <Td></Td>
-                              </React.Fragment>
-                            ))}
-                          </Tr>
-                          <Tr>
-                            <Td></Td>
-                            <Td></Td>
-                            {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                              <React.Fragment key={groupIndex}>
-                                <Td textAlign="right">
-                                  <Flex flexDir="column">
-                                    <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>نقطة مدة الانجاز</label>
-              
-                                    <Input
-                                      border="1px solid gray"
-                                      placeholder="نقطة العرض المالي"
-                                      textAlign="right"
-                                      value={calculatedPoints[groupIndex]?.financialPoints || "0.00"}
-                                      readOnly
-                                      fontSize="lg"
-                                      height="2.5rem"
-                                      bg="gray.50"
-                                      fontWeight="bold"
-                                    />
-              
-                                  </Flex>
-                                </Td>
-                                <Td></Td>
-                              </React.Fragment>
-                            ))}
-                          </Tr>
-                          <Tr>
-                            <Td></Td>
-                            <Td></Td>
-                            {Array.from({ length: groupCount }).map((_, groupIndex) => (
-                              <React.Fragment key={groupIndex}>
-                                <Td textAlign="right">
-                                  <Flex flexDir="column">
-                                    <label style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>النقطة النهائية</label>
-                                    <Input
-                                      placeholder="النقطة النهائية"
-                                      textAlign="right"
-                                      value={calculatedPoints[groupIndex]?.totalPoints || "0.00"}
-                                      readOnly
-                                    />
-                                  </Flex>
-                                </Td>
-                                <Td></Td>
-                              </React.Fragment>
-                            ))}
-            </Tr>
-          </Tfoot>
-        </Table>
-      </TableContainer>
-      <Box mt={4} display="flex" flexWrap="wrap" gap={2}>
-        <Button onClick={addRow} colorScheme="teal" size="lg" fontWeight="bold">
-          Ajouter Ligne
+          </SimpleGrid>
+        </CardBody>
+      </Card>
+
+      <Flex mt={6} gap={4} justifyContent="center" flexWrap="wrap">
+        <Button
+          onClick={addRow}
+          colorScheme="teal"
+          size="lg"
+          fontWeight="bold"
+          leftIcon={<FiPlus />}
+          shadow="md"
+          _hover={{ transform: "translateY(-2px)", shadow: "lg" }}
+          transition="all 0.2s"
+        >
+          Ajouter une ligne
         </Button>
-        <Button onClick={addGroup} colorScheme="blue" size="lg" fontWeight="bold">
-          Ajouter Fournisseur
+        <Button
+          onClick={addGroup}
+          colorScheme="blue"
+          size="lg"
+          fontWeight="bold"
+          leftIcon={<FiUsers />}
+          shadow="md"
+          _hover={{ transform: "translateY(-2px)", shadow: "lg" }}
+          transition="all 0.2s"
+        >
+          Ajouter fournisseur
         </Button>
-        <Button onClick={saveTableData} colorScheme="green" size="lg" fontWeight="bold" isLoading={isSaving} loadingText="Sauvegarde...">
-          Sauvegarder
+        <Button
+          onClick={saveTableData}
+          colorScheme="green"
+          size="lg"
+          fontWeight="bold"
+          isLoading={isSaving}
+          loadingText="Saving..."
+          leftIcon={<FiSave />}
+          shadow="md"
+          _hover={{ transform: "translateY(-2px)", shadow: "lg" }}
+          transition="all 0.2s"
+        >
+          sauvgarder
         </Button>
-      </Box>
-    </Box>
+      </Flex>
+    </Container>
   )
 }
 
