@@ -57,8 +57,12 @@ const Cahier_de_charge = () => {
         localStorage.removeItem('token');
         history("/");
     };
+    const handleBack = () => {
+        history("/besoins");
+    };
     const [existingLots, setExistingLots] = useState([]);
     const [existingLotNumbers, setExistingLotNumbers] = useState([]);
+    const [selectedLotFilter, setSelectedLotFilter] = useState('all');
     useEffect(() => {
         fetchProducts();
 
@@ -1120,6 +1124,10 @@ const Cahier_de_charge = () => {
     const productQuantityRef = useRef(null);
     const NumRationRef = useRef(null);
     const TitreRationRef = useRef(null);
+    const filteredProducts = products.filter(product => {
+        if (selectedLotFilter === 'all') return true;
+        return product.titre_ration === selectedLotFilter;
+    });
     return (
         <>
             <Sidebar />
@@ -1161,6 +1169,13 @@ const Cahier_de_charge = () => {
                             <span>{projectName}</span>
                         </h3>
                         <Flex display='flex' justifyContent='flex-start' alignItems="center" gap={4} className='buttonsposition' style={{ width: '100%', paddingLeft: '25px' }}>
+                            <button 
+                                className='pdfButton' 
+                                onClick={handleBack}
+                                style={{ backgroundColor: '#6B7280' }}
+                            >
+                                Back
+                            </button>
                             <button className='pdfButton'>
                                 <PDFDownloadLink document={<AppelOffre products={products} />} fileName="Appel d'offre">
                                     {({ blob, url, loading, error }) => (loading ? 'Chargement..' : <span style={{ color: 'white' }}>Appel d'offre</span>)}
@@ -1181,7 +1196,24 @@ const Cahier_de_charge = () => {
 
                         </Flex>
                     </Flex>
-
+                    <Box mx="auto" mt={2} ml={20}>
+                        <select
+                            value={selectedLotFilter}
+                            onChange={(e) => setSelectedLotFilter(e.target.value)}
+                            style={{ 
+                                padding: '8px', 
+                                borderRadius: '5px', 
+                                border: '1px solid #cccccc',
+                                marginBottom: '10px',
+                                width: '200px'
+                            }}
+                        >
+                            <option value="all">All Lots</option>
+                            {existingLots.map((lot, index) => (
+                                <option key={index} value={lot}>{lot}</option>
+                            ))}
+                        </select>
+                    </Box>
                     <Box className='tables' mx="auto" mt={5} ml={20} bg={bg} overflowX="auto" border='2px solid #cccccc' padding='15px' borderRadius={10}>
                         <table>
                             <thead>
@@ -1196,7 +1228,7 @@ const Cahier_de_charge = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {products.map((product, index) => (
+                                {filteredProducts.map((product, index) => (
 
                                     <tr key={product._id}>
                                         <td>{index + 1}</td>
