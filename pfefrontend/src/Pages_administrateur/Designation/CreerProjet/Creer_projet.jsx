@@ -8,6 +8,8 @@ import { format } from 'date-fns';
 import { FaSignOutAlt } from 'react-icons/fa';
 import { Avatar, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom';
+import { FaProjectDiagram, FaLayerGroup, FaRegClock } from 'react-icons/fa';
+import { AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from "@chakra-ui/react";
 import '../../../components/Navbar/Navbar.css';
 import './Creer_projet.css'
 
@@ -17,6 +19,9 @@ function Creer_projet() {
     const [items, setItems] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState(null);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [projectToDelete, setProjectToDelete] = useState(null);
+    const cancelRef = React.useRef();
     const bg = useColorModeValue("white");
     const history = useNavigate();
     const email = localStorage.getItem('email');
@@ -125,6 +130,19 @@ function Creer_projet() {
         history("/");
     };
 
+    const handleDeleteClick = (item) => {
+        setProjectToDelete(item);
+        setIsDeleteDialogOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (projectToDelete) {
+            await handleDelete(projectToDelete._id);
+            setIsDeleteDialogOpen(false);
+            setProjectToDelete(null);
+        }
+    };
+
     return (
         <>
             <Sidebar />
@@ -164,12 +182,51 @@ function Creer_projet() {
                     <Button border='1px solid #cccccc' borderRadius={10} leftIcon={<AddIcon />} ml='4px' fontSize={{ sm: '14px', md: '17px' }} fontWeight={700} onClick={() => setIsModalOpen(true)} backgroundColor="#2B6CB0" color='white' p={2} >CREER</Button>
                 </Flex>
                 <Box className='tables' mx="auto" mt={25} ml={20} bg={bg} overflowX="auto" border='1px solid #cccccc' padding='15px' borderRadius={10}>
-                    <table style={{ border: 'none' }}>
+                    <table style={{ border: 'none', width: '100%' }}>
                         <thead>
-                            <tr>
-                                <th className="responsive-th" style={{ border: 'none', color: '#aaaaaa' }}>Projet</th>
-                                <th className="responsive-th" style={{ border: 'none', color: '#aaaaaa' }}>Type</th>
-                                <th className="responsive-th" style={{ border: 'none', color: '#aaaaaa' }}>Date de création</th>
+                            <tr style={{ borderBottom: '2px solid #edf2f7' }}>
+                                <th className="responsive-th" style={{ 
+                                    border: 'none', 
+                                    color: '#4a5568',
+                                    padding: '16px',
+                                    fontSize: '0.875rem',
+                                    fontWeight: '600',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.05em'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <FaProjectDiagram />
+                                        <span>Projet</span>
+                                    </div>
+                                </th>
+                                <th className="responsive-th" style={{ 
+                                    border: 'none', 
+                                    color: '#4a5568',
+                                    padding: '16px',
+                                    fontSize: '0.875rem',
+                                    fontWeight: '600',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.05em'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <FaLayerGroup />
+                                        <span>Type</span>
+                                    </div>
+                                </th>
+                                <th className="responsive-th" style={{ 
+                                    border: 'none', 
+                                    color: '#4a5568',
+                                    padding: '16px',
+                                    fontSize: '0.875rem',
+                                    fontWeight: '600',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.05em'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <FaRegClock />
+                                        <span>Date de création</span>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody >
@@ -200,7 +257,17 @@ function Creer_projet() {
                                                 >
                                                     Modifier
                                                 </MenuItem>
-                                                <MenuItem style={{ backgroundColor: 'white', border: 'none', padding: '10px', fontSize: '16px', fontWeight: '500', color: 'red', cursor: 'pointer' }} onClick={() => handleDelete(item._id)}>Supprimer</MenuItem>
+                                                <MenuItem style={{ 
+                                                    backgroundColor: 'white', 
+                                                    border: 'none', 
+                                                    padding: '10px', 
+                                                    fontSize: '16px', 
+                                                    fontWeight: '500', 
+                                                    color: 'red', 
+                                                    cursor: 'pointer' 
+                                                }} onClick={() => handleDeleteClick(item)}>
+                                                    Supprimer
+                                                </MenuItem>
                                             </MenuList>
                                         </Menu>
                                     </td>
@@ -246,12 +313,38 @@ function Creer_projet() {
                                 </Select>
                             </FormControl>
                             <Flex justifyContent="center" mt={4}>
-                                <Button backgroundColor="blue" width={100} color={'white'} border='none' borderRadius='20' mr={120} mt={20} padding={3} onClick={handleSave}>Save</Button>
+                                <Button backgroundColor="green" width={100} color={'white'} border='none' borderRadius='20' mr={120} mt={20} padding={3} onClick={handleSave}>Save</Button>
                                 <Button width={100} color={'white'} border='none' borderRadius='20' backgroundColor="red" mt={20} onClick={() => setIsModalOpen(false)}>Cancel</Button>
                             </Flex>
                         </Box>
                     </Box>
                 )}
+                <AlertDialog
+                    isOpen={isDeleteDialogOpen}
+                    leastDestructiveRef={cancelRef}
+                    onClose={() => setIsDeleteDialogOpen(false)}
+                >
+                    <AlertDialogOverlay>
+                        <AlertDialogContent>
+                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                                Confirmer la suppression
+                            </AlertDialogHeader>
+
+                            <AlertDialogBody>
+                                Êtes-vous sûr de vouloir supprimer ce projet? Cette action ne peut pas être annulée.
+                            </AlertDialogBody>
+
+                            <AlertDialogFooter>
+                                <Button ref={cancelRef} onClick={() => setIsDeleteDialogOpen(false)}>
+                                    Annuler
+                                </Button>
+                                <Button colorScheme="red" onClick={confirmDelete} ml={3}>
+                                    Supprimer
+                                </Button>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialogOverlay>
+                </AlertDialog>
             </main >
         </>
     );

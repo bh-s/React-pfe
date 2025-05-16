@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 import "./Footer.css";
 import image from '../images/rectorat.jpg'
+
 const FooterLinks = [
     {
         title: "Home",
@@ -26,22 +27,34 @@ const FooterLinks = [
         link: "/#blog",
     },
 ];
+
 const Footer = () => {
     return (
-        <><div class="serv">
-            <div class="content">
-                <div class="comp-container">
-                    <h2 className="title" id="titleLocation">Localisation</h2>
-                </div>
-                <div class="pctr">
-                    <img src={image} alt="image" />
-                    <iframe className="map" width="550" height="330" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=B.P%2078C,%20Ouled%20Fares%2002180%20Chlef,%20Alg%C3%A9rie+(Universit%C3%A9%20Hassiba%20Benbouali%20de%20Chlef)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"><a href="https://www.gps.ie/">gps trackers</a></iframe>
+        <>
+            <div className="serv">
+                <div className="content">
+                    <div className="comp-container">
+                        <h2 className="title" id="titleLocation">Localisation</h2>
+                    </div>
+                    <div className="pctr">
+                        <img src={image} alt="image" />
+                        <iframe 
+                            className="map" 
+                            width="550" 
+                            height="330" 
+                            frameborder="0" 
+                            scrolling="no" 
+                            marginheight="0" 
+                            marginwidth="0" 
+                            src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=B.P%2078C,%20Ouled%20Fares%2002180%20Chlef,%20Alg%C3%A9rie+(Universit%C3%A9%20Hassiba%20Benbouali%20de%20Chlef)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                        />
+                    </div>
                 </div>
             </div>
-        </div><footer class="footer">
-                <div class="container3">
-                    <div class="row">
-                        <div class="footer-col">
+            <footer className="footer">
+                <div className="container3">
+                    <div className="row">
+                        <div className="footer-col">
                             <h4>company</h4>
                             <ul>
                                 <li><a href="#">Présentation</a></li>
@@ -49,7 +62,7 @@ const Footer = () => {
                                 <li><a href="#">Location</a></li>
                             </ul>
                         </div>
-                        <div class="footer-col">
+                        <div className="footer-col">
                             <h4>get help</h4>
                             <ul>
                                 <li><a href="#">FAQ</a></li>
@@ -59,9 +72,9 @@ const Footer = () => {
                                 <li><a href="#">payment options</a></li>
                             </ul>
                         </div>
-                        <div class="footer-col">
+                        <div className="footer-col">
                             <h4>follow us</h4>
-                            <div class="social-links">
+                            <div className="social-links">
                                 <a href="https://www.facebook.com/uhbc.dz/"><i>     <FaFacebook />   </i></a>
                                 <a href="https://www.linkedin.com/school/universit%C3%A9-hassiba-ben-bouali-chlef/?originalSubdomain=fr"><i>     <FaLinkedin />   </i></a>
                                 <a href="https://www.youtube.com/channel/UCCZ5M_ObCUDENiKEeZia0ag"><i>     <FaYoutube />   </i></a>
@@ -71,7 +84,8 @@ const Footer = () => {
                         </div>
                     </div>
                 </div>
-            </footer></>
+            </footer>
+        </>
     );
 };
 

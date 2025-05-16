@@ -38,3 +38,37 @@
         margin-bottom: 10px;
     }
 }
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+tbody tr {
+    transition: all 0.2s ease-in-out;
+}
+
+tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+th, td {
+    padding: 16px;
+    text-align: left;
+}
+
+.responsive-th {
+    white-space: nowrap;
+}
+
+.responsive-th div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.responsive-th svg {
+    color: #4a5568;
+    font-size: 1.1rem;
+}

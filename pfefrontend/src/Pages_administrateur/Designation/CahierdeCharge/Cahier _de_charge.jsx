@@ -1190,7 +1190,7 @@ const Cahier_de_charge = () => {
                                         <td>{index + 1}</td>
                                         <td> <textarea
                                             ref={TitreRationRef}
-                                            placeholder="titre"
+                                            placeholder="LOT"
                                             value={product.titre_ration}
                                             onChange={(e) => {
                                                 settitreRation(e.target.value);
@@ -1202,7 +1202,7 @@ const Cahier_de_charge = () => {
                                         /></td>
                                         <td><textarea
                                             ref={NumRationRef}
-                                            placeholder="Num ration"
+                                            placeholder="N DE LOT"
                                             value={product.num_ration}
                                             onChange={(e) => {
                                                 setNumRation(e.target.value);

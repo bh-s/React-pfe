@@ -27,3 +27,19 @@
     display: block;
     margin-bottom: 5px;
 }
+
+.error-input {
+    border: 1px solid #ff4d4d !important;
+    background-color: #fff8f8;
+}
+
+.error-message {
+    color: #ff4d4d;
+    font-size: 0.875rem;
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+
+.input3[required] {
+    border-left: 3px solid #2B6CB0;
+}

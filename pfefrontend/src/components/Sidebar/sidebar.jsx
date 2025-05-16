@@ -7,6 +7,7 @@ import { Icon, useColorMode, Text } from "@chakra-ui/react";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import logo from '../images/Frame 8 (3).jpg'
 import './sidebar.css'
+import { FaRegNewspaper } from "react-icons/fa"; // Add this import at the top if not already present
 const Sidebar = () => {
     const { colorMode, toggleColorMode } = useColorMode();
     const location = useLocation();
@@ -18,11 +19,11 @@ const Sidebar = () => {
     const HumbiconColor = useColorModeValue("#A0AEC0", "white");
 
     const menuItem = [
-        { path: "/besoins", name: 'Désignation', icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/ouverture_et_evaluation_des_offres", name: '  Procès-verbal d’ouverture et évaluation des offres', icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/Blog", name: 'Blog budgétaire', icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/pending-users", name: 'Utilisateurs', icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/Appel_d_offre", name: 'Annance', icon: <ArrowRightIcon color='#FB8808' /> },
+        { path: "/besoins", name: 'Désignation', icon: <FaHome color='#FB8808' /> },
+        { path: "/ouverture_et_evaluation_des_offres", name: ' d’ouverture et évaluation ', icon: <FaUserShield color='#FB8808' /> },
+        { path: "/Blog", name: 'Blog budgétaire', icon: <FaRegNewspaper color='#FB8808' /> },
+        { path: "/pending-users", name: 'Utilisateurs', icon: <FaUserFriends color='#FB8808' /> },
+        { path: "/Appel_d_offre", name: 'Annance', icon: <FaMoneyBillWave color='#FB8808' /> }, // Changed icon here
         { path: "*", name: "Avis", icon: <ArrowRightIcon color='#FB8808' /> },
         { path: "*", name: 'Recours', icon: <ArrowRightIcon color='#FB8808' /> },
     ];
