@@ -369,42 +369,48 @@ function Rapport() {
             ))
         );
 
-        const rationParagraphs = uniqueData.map(item =>
-            `<p style="font-size: 16px; text-align: right">
-                ${item?.titre_ration ? `حصة ${item?.num_ration} ${item?.titre_ration || ''}` : ''}
-            </p>`
-        ).join('');
-
         return `
-        <h1 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">الإجراءات المكيفة</h1>
-        <h1 style="text-align: center;font-size: 20px; font-family: 'Times New Roman'">${projectName}</h1>
-        <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">استشـــارة رقم المتعلقة ب ${projectName} <p/>
-        ${rationParagraphs}
-        ${uniqueData[0]?.titre_ration ? '' : ''}
-        ${uniqueData[0]?.num_ration ? generateProductsTable(uniqueData[0].products) : ''}
-        <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">حيث فتحت الأظرفـة في جلســة علنيــة بتاريخ ${items?.createdAt}و المعلــن عنهــا بتاريـــخ <p/>
-             <h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">I.	الإجراءات المكيفة: الاستشارات ومعايير الانتقاءة</h2>
-             <h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">1.	تعليل الإجراء:ة</h2>
-               <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">       تمت الاستشارة وفقا لأحكام المرسوم الرئاسي 15-247 المؤرخ في 16 سبتمبر 2015 المتضمن تنظيم الصفقات العمومية وتفويضات المرفق العام لا سيما المواد 13 إلى 22 منه و القانون رقم 23-12 المؤرخ في 05 أوت 2023 المحدد للقواعد العامة المتعلقة بالصفقات العمومية.
-•	تطبيقا للمادة 87 من المرسوم الرئاسي 15-247 المؤرخ في 16 سبتمبر 2015 المتضمن تنظيم الصفقات العمومية وتفويضات المرفق العام فإنه لم تتم مشاركة المؤسسات المصغرة لعدم تلبية الحاجات
-<p/>
- <h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">   2.	معلومات حول إجراء الاستشارة:</h2>
- <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">      إعلان عن الاستشارة بتاريخ 20-03-2024 بالإضافة إلى رسالة الاستشارة: رقم 24،25،27،28،29،30 و 32 بتاريخ 20/03/2024 المبلغة إلى المتعاملين الاقتصاديين كتابياً عن طريق الفاكس أو عن طريق الاستلام اليدوي، مع الاعلان في الموقع الالكتروني للكلية و الموقع الالكتروني للجامعة و اشهار الاعلان على مستوى غرفة التجارة ، الوكالة الوطنية لدعم تشغيل الشباب (ANSEJ) ،الوكالة الوطنية لتسيير القرض المصغر (ANGEM) الصندوق الوطني للتأمين عن البطالة (CNEC).
- </p> 
- <p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">-	التقدير الإداري: الحصة رقم01 :700 000,00 دج، الحصة رقم03 : 200 000,00 دج ، الحصة رقم 04: 000 000,00 1 دج تم اعداد هذا التقدير وفقاً:
-•	مبلغ الميزانية.
-•	الأسعار المتداولة في السوق الوطني
--	العارضون المشاركون مدعوون لحضور جلسة فتح الأظرفة المقرر إجراؤها بقاعة الاجتماعات بكلية العلوم الدقيقة و الإعلام الآلي 
-بتاريخ: 27/03/2024 على الساعة العاشرة (10) صباحاً.
- </p> 
- <h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">3. الأهلية:</h2>
-<p style="text-align:right;font-size: 20px; font-family: 'Times New Roman'">
--	المتعهد الحاصل على الاستشارة ليس في حالة إفلاس.
--	المتعهد الحاصلين على الاستشارة في وضعية  قانونية.
--	المتعهد الحاصلون على الاستشارة يمارسون نفس النشاط موضوع الاستشارة و المبين في السجل التجاري لكل متعهد 
- 
- </p>
-<h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'"> 4.	التعريف بالمتعاملين الاقتصاديين الذين تمت استشارتهم:	</h2>
+        <div dir="rtl">
+            <h1 style="text-align: center; font-size: 24px; margin-bottom: 20px;">تقرير تقديمي الاستشارة رقم ${projectName}</h1>
+            
+            <h2 style="font-size: 20px; margin-top: 30px;">I. إطار الاستشارة:</h2>
+            <p>في إطار تنفيذ ميزانية التسيير للسنة المالية 2024، يقترح على سيادتكم تقرير تقديمي للاستشارة المتعلقة بـ ${projectName}.</p>
+            
+            <h2 style="font-size: 20px; margin-top: 30px;">II. موضوع الاستشارة:</h2>
+            <p>تتعلق الاستشارة بـ:</p>
+            ${uniqueData.map(item => `
+                <p>الحصة رقم ${item.num_ration}: ${item.titre_ration}</p>
+            `).join('')}
+            
+            <h2 style="font-size: 20px; margin-top: 30px;">III. الإجراءات المتبعة:</h2>
+            <p>تمت الاستشارة وفقا للإجراءات المكيفة طبقا للمواد من 13 إلى 22 من المرسوم الرئاسي رقم 15-247 المؤرخ في 16 سبتمبر 2015 المتضمن تنظيم الصفقات العمومية و تفويضات المرفق العام.</p>
+            
+            <h2 style="font-size: 20px; margin-top: 30px;">IV. المتعهدون المشاركون:</h2>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <tr>
+                    <th style="border: 1px solid black; padding: 8px;">المتعهد</th>
+                    <th style="border: 1px solid black; padding: 8px;">رقم الحصة</th>
+                    <th style="border: 1px solid black; padding: 8px;">المبلغ (دج)</th>
+                    <th style="border: 1px solid black; padding: 8px;">ملاحظات</th>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 8px;"></td>
+                    <td style="border: 1px solid black; padding: 8px;"></td>
+                    <td style="border: 1px solid black; padding: 8px;"></td>
+                    <td style="border: 1px solid black; padding: 8px;"></td>
+                </tr>
+            </table>
+            
+            <h2 style="font-size: 20px; margin-top: 30px;">V. التقييم:</h2>
+            <p>بعد دراسة العروض المقدمة من طرف المتعهدين و تقييمها، يتبين ما يلي:</p>
+            
+            <h2 style="font-size: 20px; margin-top: 30px;">VI. الاقتراح:</h2>
+            <p>بناءً على ما سبق، نقترح إسناد الاستشارة كما يلي:</p>
+            
+            <div style="margin-top: 50px; text-align: left;">
+                <p>الشلف في: ${new Date().toLocaleDateString('ar-DZ')}</p>
+            </div>
+        </div>
     `;
 };
 
