@@ -38,6 +38,7 @@ function App() {
           <Route path="/Appel_d_offre" element={<Appel />} />
           <Route path="/rapport-projects" element={<PageRapport />} />
           <Route path="/rapport/:projectName" element={<Rapport />} />
+          <Route path="/rapport_de_presentation" element={<Rapport />} />
           <Route path="/ouverture_et_evaluation_des_offres" element={< Page />} />
           <Route path="/ouverture_et_evaluation_des_offres/:projectName/ouverture" element={<Ouverture />} />
           <Route path="/ouverture_et_evaluation_des_offres/:projectName/evaluation" element={<Evaluation />} />
