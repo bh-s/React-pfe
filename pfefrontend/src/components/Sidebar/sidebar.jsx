@@ -23,9 +23,9 @@ const Sidebar = () => {
         { path: "/Blog", name: 'Blog budgétaire', icon: <ArrowRightIcon color='#FB8808' /> },
         { path: "/pending-users", name: 'Utilisateurs', icon: <ArrowRightIcon color='#FB8808' /> },
         { path: "/Appel_d_offre", name: 'Annance', icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/rapport-presentation", name: "Rapport de présentation", icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "*", name: "Avis", icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "*", name: 'Recours', icon: <ArrowRightIcon color='#FB8808' /> },
+        { path: "/rapport-de-presentation", name: "Rapport de présentation", icon: <ArrowRightIcon color='#FB8808' /> },
+        { path: "/avis", name: "Avis", icon: <ArrowRightIcon color='#FB8808' /> },
+        { path: "/recours", name: 'Recours', icon: <ArrowRightIcon color='#FB8808' /> },
     ];
 
     return (
