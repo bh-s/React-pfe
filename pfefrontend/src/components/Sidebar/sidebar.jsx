@@ -1,65 +1,113 @@
-import React, { useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { useColorModeValue, Flex, Button } from '@chakra-ui/react';
-import { ArrowRightIcon } from '@chakra-ui/icons'
-import { FaHome, FaBars, FaUserFriends, FaUserShield, FaMoneyBillWave, FaUserCircle } from "react-icons/fa";
-import { Icon, useColorMode, Text } from "@chakra-ui/react";
-import { IoMdMoon, IoMdSunny } from "react-icons/io";
-import logo from '../images/Frame 8 (3).jpg'
-import './sidebar.css'
+"use client";
+
+import { useState } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { useColorModeValue } from "@chakra-ui/react";
+import { FaBars } from "react-icons/fa";
+import { useColorMode } from "@chakra-ui/react";
+import logo from "../images/Frame 8 (3).jpg";
+import "./sidebar.css";
+
 const Sidebar = () => {
-    const { colorMode, toggleColorMode } = useColorMode();
-    const location = useLocation();
-    const [isOpen, setIsOpen] = useState(false);
-    const toggleSidebar = () => setIsOpen(!isOpen);
-    const sidebarBackgroundColor = useColorModeValue("white", "#1B254B");
-    const textColor = useColorModeValue("black", "white");
-    const iconColor = useColorModeValue("#4318FF", "white");
-    const HumbiconColor = useColorModeValue("#A0AEC0", "white");
+  const { colorMode } = useColorMode();
+  const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleSidebar = () => setIsOpen(!isOpen);
+  const HumbiconColor = useColorModeValue("#A0AEC0", "white");
 
-    const menuItem = [
-        { path: "/besoins", name: 'Désignation', icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/ouverture_et_evaluation_des_offres", name: '  Procès-verbal d\'ouverture et évaluation des offres', icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/Blog", name: 'Blog budgétaire', icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/pending-users", name: 'Utilisateurs', icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/Appel_d_offre", name: 'Annance', icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/rapport-de-presentation", name: "Rapport de présentation", icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/avis", name: "Avis", icon: <ArrowRightIcon color='#FB8808' /> },
-        { path: "/recours", name: 'Recours', icon: <ArrowRightIcon color='#FB8808' /> },
-    ];
+  // Define menu categories and items
+  const menuCategories = [
+    {
+      title: "GESTION DES PROJETS",
+      items: [
+        { path: "/besoins", name: "Désignation", icon: "»" },
+        {
+          path: "/ouverture_et_evaluation_des_offres",
+          name: "Procès-verbal d'ouverture et évaluation des offres",
+          icon: "»",
+        },
+      ],
+    },
+    {
+      title: "DOCUMENTATION",
+      items: [{ path: "/Blog", name: "Blog budgétaire", icon: "»" }],
+    },
+    {
+      title: "ADMINISTRATION",
+      items: [{ path: "/pending-users", name: "Utilisateurs", icon: "»" }],
+    },
+    {
+      title: "PUBLICATIONS",
+      items: [
+        { path: "/Appel_d_offre", name: "Annonce", icon: "»" },
+        { path: "/avis", name: "Avis", icon: "»" },
+      ],
+    },
+    {
+      title: "RAPPORTS",
+      items: [
+        {
+          path: "/rapport-de-presentation",
+          name: "Rapport de présentation",
+          icon: "»",
+        },
+      ],
+    },
+    {
+      title: "GESTION JURIDIQUE",
+      items: [{ path: "/recours", name: "Recours", icon: "»" }],
+    },
+  ];
 
-    return (
-        <>
-            <div className={`overlay ${isOpen ? 'active' : ''}`} onClick={toggleSidebar}></div>
-            <div className="container">
-                <div className="hamburger" onClick={toggleSidebar}>
-                    <FaBars color={HumbiconColor} size="28px" />
-                </div>
-                <div className={`overlay ${isOpen ? 'active' : ''}`} onClick={toggleSidebar}></div>
-                <div className={`sidebar ${isOpen ? 'open' : ''}`} style={{ backgroundColor: sidebarBackgroundColor }}>
-                    <div className="top_section" style={{ borderBottom: '2px solid #8F8F8F' }} >
-                        <img className="logo" id='logo' src={logo} alt=';' />
-                    </div>
+  return (
+    <>
+      <div
+        className={`overlay ${isOpen ? "active" : ""}`}
+        onClick={toggleSidebar}
+      ></div>
+      <div className="container">
+        <div className="hamburger" onClick={toggleSidebar}>
+          <FaBars color={HumbiconColor} size="28px" />
+        </div>
+        <div
+          className={`overlay ${isOpen ? "active" : ""}`}
+          onClick={toggleSidebar}
+        ></div>
+        <div className={`sidebar ${isOpen ? "open" : ""}`}>
+          <div className="top_section">
+            <img
+              className="logo"
+              id="logo"
+              src={logo || "/placeholder.svg"}
+              alt="Logo"
+            />
+          </div>
 
-                    {menuItem.map((item, index) => (
-                        <NavLink
-                            onClick={toggleSidebar}
-                            to={item.path}
-                            key={index}
-                            className="link"
-                            style={location.pathname === item.path ?
-                                { color: '#000' } :
-                                { color: textColor, fontWeight: "500" }}>
-                            <div className="icon">{item.icon}</div>
-                            <div className="link_text">{item.name}</div>
-                        </NavLink>
-                    ))}
-
-                </div>
-            </div >
-            <Outlet />
-        </>
-    );
+          {menuCategories.map((category, catIndex) => (
+            <div key={catIndex}>
+              <div className="category-header">{category.title}</div>
+              {category.items.map((item, index) => (
+                <NavLink
+                  onClick={toggleSidebar}
+                  to={item.path}
+                  key={index}
+                  className={({ isActive }) =>
+                    `link ${isActive ? "active" : ""}`
+                  }
+                >
+                  <div className="icon" style={{ color: "#FB8808" }}>
+                    {item.icon}
+                  </div>
+                  <div className="link_text">{item.name}</div>
+                </NavLink>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <Outlet />
+    </>
+  );
 };
 
 export default Sidebar;
