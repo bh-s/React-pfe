@@ -85,7 +85,7 @@
 
 .input-group input:focus {
   outline: none;
-  border-color: #006d3a;
+  border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(0, 109, 58, 0.1);
   background-color: white;
 }
@@ -102,7 +102,7 @@
 }
 
 .password-toggle:hover {
-  color: #006d3a;
+  color: #3b82f6;
 }
 
 .forgot-password {
@@ -118,14 +118,14 @@
 }
 
 .forgot-password a:hover {
-  color: #006d3a;
+  color: #3b82f6;
   text-decoration: underline;
 }
 
 .login-button {
   width: 100%;
   padding: 1rem;
-  background-color: #006d3a;
+  background-color: #3b82f6;
   color: white;
   border: none;
   border-radius: 8px;
@@ -140,7 +140,7 @@
 }
 
 .login-button:hover:not(:disabled) {
-  background-color: #005a30;
+  background-color: #1d4ed8;
   transform: translateY(-2px);
 }
 
@@ -195,7 +195,7 @@
   left: 1.5rem;
   width: 40px;
   height: 40px;
-  background-color: #006d3a;
+  background-color: #3b82f6;
   color: white;
   border: none;
   border-radius: 50%;
@@ -208,7 +208,7 @@
 }
 
 .button-back:hover {
-  background-color: #005a30;
+  background-color: #1d4ed8;
   transform: scale(1.05);
 }
 
