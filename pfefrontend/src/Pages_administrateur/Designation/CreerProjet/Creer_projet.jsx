@@ -161,7 +161,7 @@ function Creer_projet() {
                         </div>
                         <Menu>
                             <MenuButton as={Avatar}
-                                style={{ height: "33px", borderRadius: "90px", cursor: "pointer", marginRight: "-27px", marginTop: '10px', backgroundColor: '#11047A' }}
+                                style={{ height: "33px", borderRadius: "90px", cursor: "pointer", marginRight: "0px", marginTop: '10px', backgroundColor: '#11047A' }}
                                 src='https://bit.ly/broken-link'
                             />
                             <MenuList style={{ borderRadius: '5px', border: '1px solid #cccccc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.4)' }}>
@@ -179,7 +179,7 @@ function Creer_projet() {
                 </div >
 
                 <Flex justifyContent="flex-end">
-                    <Button border='1px solid #cccccc' borderRadius={10} leftIcon={<AddIcon />} ml='4px' fontSize={{ sm: '14px', md: '17px' }} fontWeight={700} onClick={() => setIsModalOpen(true)} backgroundColor="#2B6CB0" color='white' p={2} >CREER</Button>
+                    <Button border='1px solid #cccccc' borderRadius={10} leftIcon={<AddIcon />} ml='4px' fontSize={{ sm: '14px', md: '17px' }} fontWeight={700} onClick={() => setIsModalOpen(true)} backgroundColor="#2B6CB0" color='white' p={2} >Créer</Button>
                 </Flex>
                 <Box className='tables' mx="auto" mt={25} ml={20} bg={bg} overflowX="auto" border='1px solid #cccccc' padding='15px' borderRadius={10}>
                     <table style={{ border: 'none', width: '100%' }}>
@@ -279,7 +279,7 @@ function Creer_projet() {
                 {isModalOpen && (
                     <Box className='modal'>
                         <Box position="fixed" top="50%" left="50%" transform="translate(-50%, -50%)" bg={bg} borderRadius={13} height='auto' width={400} padding={15}>
-                            <FormLabel fontSize={23} fontWeight={500} marginTop={14} marginBottom={10}>CREER UN PROJET</FormLabel>
+                            <FormLabel fontSize={23} fontWeight={500} marginTop={14} marginBottom={10}>Créer UN Projet</FormLabel>
                             <FormControl>
                                 <FormLabel fontSize={20} fontWeight={500}>Name</FormLabel>
                                 <Input
@@ -313,8 +313,8 @@ function Creer_projet() {
                                 </Select>
                             </FormControl>
                             <Flex justifyContent="center" mt={4}>
-                                <Button backgroundColor="green" width={100} color={'white'} border='none' borderRadius='20' mr={120} mt={20} padding={3} onClick={handleSave}>Save</Button>
-                                <Button width={100} color={'white'} border='none' borderRadius='20' backgroundColor="red" mt={20} onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                                <Button backgroundColor="#3b82f6" width={100} color={'white'} border='none' borderRadius='20' mr={120} mt={20} padding={3} onClick={handleSave}>Save</Button>
+                                <Button width={100} color={'white'} border='none' borderRadius='20' backgroundColor="#dc3545" mt={20} onClick={() => setIsModalOpen(false)}>Cancel</Button>
                             </Flex>
                         </Box>
                     </Box>
