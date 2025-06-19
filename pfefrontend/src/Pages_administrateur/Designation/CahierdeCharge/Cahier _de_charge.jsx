@@ -110,8 +110,7 @@ const Cahier_de_charge = () => {
     setProjectName(projectNameFromQuery);
     try {
       const response = await axios.get(
-        `${
-          import.meta.env.VITE_API_URL
+        `${import.meta.env.VITE_API_URL
         }/data?projectName=${projectNameFromQuery}`
       );
       setProducts(response.data);
@@ -473,7 +472,7 @@ const Cahier_de_charge = () => {
           {products.map((product, index) => (
             <View key={index}>
               {index === 0 ||
-              product.titre_ration !== products[index - 1].titre_ration ? (
+                product.titre_ration !== products[index - 1].titre_ration ? (
                 <>
                   <Text
                     style={[
@@ -1858,7 +1857,7 @@ const Cahier_de_charge = () => {
           {products.map((product, index) => (
             <View key={index}>
               {index === 0 ||
-              product.titre_ration !== products[index - 1].titre_ration ? (
+                product.titre_ration !== products[index - 1].titre_ration ? (
                 <>
                   <Text
                     style={[

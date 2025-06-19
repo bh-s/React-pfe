@@ -1,12 +1,12 @@
 // import './App.css'
-import Home from "./Pages_accueil/Home/Home";
-import Login from "./Pages_accueil/Utilisateurs/Login/Login";
-import Signup from "./Pages_accueil/Utilisateurs/Register/Register";
+import Home from "./Pages_accueil/Home/Home"
+import Login from "./Pages_accueil/Utilisateurs/Login/Login"
+import Signup from "./Pages_accueil/Utilisateurs/Register/Register"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./index.css";
+import './index.css'
 import Navbar from "./components/Navbar/Navbar";
 import Besoins from "./Pages_administrateur/Designation/CreerProjet/Creer_projet";
-import Data from "./Pages_administrateur/Designation/CahierdeCharge/Cahier _de_charge";
+import Data from "./Pages_administrateur/Designation/CahierdeCharge/Cahier _de_charge"
 import Blog from "./Pages_administrateur/Blog_bugetaire/Blog_bugetaire";
 import Pending from "./Pages_accueil/Utilisateurs/enattente/pending";
 import PendingUsers from "./Pages_administrateur/Utilisaeurs/Utilisateurs";
@@ -21,6 +21,7 @@ import PageRapport from "./Pages_administrateur/Rapport_de_presentation/Page";
 function App() {
   return (
     <div className="App">
+
       <Router>
         <Routes>
           <Route path="/" element={<Navbar />} />
@@ -35,20 +36,11 @@ function App() {
           <Route path="/pending" element={<Pending />} />
           <Route path="/pending-users" element={<PendingUsers />} />
           <Route path="/Appel_d_offre" element={<Appel />} />
-          <Route path="/rapport-de-presentation" element={<Rapport />} />
-          <Route path="/rapport/:projectName" element={<PageRapport />} />
-          <Route
-            path="/ouverture_et_evaluation_des_offres"
-            element={<Page />}
-          />
-          <Route
-            path="/ouverture_et_evaluation_des_offres/:projectName/ouverture"
-            element={<Ouverture />}
-          />
-          <Route
-            path="/ouverture_et_evaluation_des_offres/:projectName/evaluation"
-            element={<Evaluation />}
-          />
+          <Route path="/rapport-projects" element={<PageRapport />} />
+          <Route path="/rapport/:projectName" element={<Rapport />} />
+          <Route path="/ouverture_et_evaluation_des_offres" element={< Page />} />
+          <Route path="/ouverture_et_evaluation_des_offres/:projectName/ouverture" element={<Ouverture />} />
+          <Route path="/ouverture_et_evaluation_des_offres/:projectName/evaluation" element={<Evaluation />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

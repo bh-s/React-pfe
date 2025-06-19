@@ -47,7 +47,7 @@ const Sidebar = () => {
       title: "RAPPORTS",
       items: [
         {
-          path: "/rapport-de-presentation",
+          path: "/rapport-projects",
           name: "Rapport de présentation",
           icon: "»",
         },
