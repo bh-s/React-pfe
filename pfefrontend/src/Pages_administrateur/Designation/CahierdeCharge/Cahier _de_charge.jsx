@@ -3249,18 +3249,8 @@ const Cahier_de_charge = () => {
                     </td>
                     <td>
                       <select
-                        value={isAddingNewLotNumber ? "new" : numRation}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          if (value === "new") {
-                            setIsAddingNewLotNumber(true);
-                            setNumRation("");
-                            setNewLotNumber("");
-                          } else {
-                            setIsAddingNewLotNumber(false);
-                            setNumRation(value);
-                          }
-                        }}
+                        value={product.num_ration || ""}
+                        onChange={(e) => handleNumRationChange(e, product._id)}
                         style={{ width: "100%", padding: "5px" }}
                       >
                         <option value="">Select N° DE LOT</option>
@@ -3269,21 +3259,7 @@ const Cahier_de_charge = () => {
                             {num}
                           </option>
                         ))}
-                        <option value="new">+ Add New N° DE LOT</option>
                       </select>
-                      {isAddingNewLotNumber && (
-                        <input
-                          type="text"
-                          placeholder="Enter new N° DE LOT"
-                          value={newLotNumber}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            setNewLotNumber(value);
-                            setNumRation(value);
-                          }}
-                          style={{ width: "100%", marginTop: "5px" }}
-                        />
-                      )}
                     </td>
                     <td>
                       <textarea
@@ -3366,18 +3342,7 @@ const Cahier_de_charge = () => {
                       </textarea>
                     </td>
                     <td style={{ display: "flex", gap: "10px" }}>
-                      <button
-                        style={{
-                          color: "#4299E1",
-                          fontSize: "1.2rem",
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => handleModifyProduct(product._id)}
-                      >
-                        <FaEdit />
-                      </button>
+
                       <button
                         style={{
                           color: "red",
