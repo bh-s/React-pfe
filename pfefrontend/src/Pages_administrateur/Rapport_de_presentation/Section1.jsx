@@ -34,7 +34,7 @@ const STATIC_TEXTS = {
     إعلان عن الاستشارة بتاريخ ${dateCreation} بالإضافة إلى رسالة الاستشارة: رقم 24،25،27،28،29،30 و 32 بتاريخ ${dateCreation} المبلغة إلى المتعاملين الاقتصاديين كتابياً عن طريق الفاكس أو عن طريق الاستلام اليدوي، مع الاعلان في الموقع الالكتروني للكلية و الموقع الالكتروني للجامعة و اشهار الاعلان على مستوى غرفة التجارة ، الوكالة الوطنية لدعم تشغيل الشباب (ANSEJ) ،الوكالة الوطنية لتسيير القرض المصغر (ANGEM) الصندوق الوطني للتأمين عن البطالة (CNEC).
 `,
 
-        SECTION_2_ADDITIONAL: (rowDate) => `- التقدير الإداري: الحصة رقم01 :700 000,00 دج، الحصة رقم03 : 200 000,00 دج ، الحصة رقم 04: 000 000,00 1 دج تم اعداد هذا التقدير وفقاً:
+        SECTION_2_ADDITIONAL: (rowDate,montantParagraphs) => `- التقدير الإداري:  ${montantParagraphs} تم اعداد هذا التقدير وفقاً:
 • مبلغ الميزانية.
 • الأسعار المتداولة في السوق الوطني
 - العارضون المشاركون مدعوون لحضور جلسة فتح الأظرفة المقرر إجراؤها بقاعة الاجتماعات بكلية العلوم الدقيقة و الإعلام الآلي 
@@ -63,7 +63,38 @@ function Section1() {
     const [annonces, setAnnonces] = useState([]);
     const [filteredAnnonces, setFilteredAnnonces] = useState([]);
     const [loading, setLoading] = useState(true);
+ useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const projectNameFromQuery = new URLSearchParams(window.location.search).get("project");
+                const currentProjectName = projectNameFromQuery || projectName;
+                setProjectName(currentProjectName);
 
+                const rapportResponse = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/data?projectName=${currentProjectName}`,
+                    { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+                );
+                setRapportData(rapportResponse.data || []);
+
+                const annoncesResponse = await axios.get(`${import.meta.env.VITE_API_URL}/getAnnonce`);
+                setAnnonces(annoncesResponse.data || []);
+
+            } catch (error) {
+                console.error("Erreur lors de la récupération des données:", error);
+                toast({
+                    title: "Erreur",
+                    description: "Échec de la récupération des données",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -133,6 +164,25 @@ function Section1() {
         <p style="font-size: 16px; text-align: right" >
             ${new Date(relevantAnnonce.date).toDateString()}
         </p>` : '';
+const montantParagraphs = Object.values(
+    rapportData.reduce((acc, item) => {
+        const key = `${item.num_ration}-${item.titre_ration}`;
+        if (!acc[key]) {
+            acc[key] = {
+                num_ration: item.num_ration,
+                titre_ration: item.titre_ration,
+                totalMontant: 0
+            };
+        }
+        acc[key].totalMontant += item.Montnt || 0;
+        return acc;
+    }, {})
+).map((item) =>
+   ` <p dir="rtl" style="font-size: 16px; text-align: right">
+    • حصة رقم ${item.num_ration} - ${item.titre_ration} : ${item.totalMontant.toLocaleString('ar-DZ')} دج
+</p>
+`
+).join('');
 
         return `
         <h1 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">
@@ -161,7 +211,7 @@ function Section1() {
             إعلان عن الاستشارة بتاريخ ${createdAt} بالإضافة إلى رسالة الاستشارة: رقم 24،25،27،28،29،30 و 32 بتاريخ ${createdAt} المبلغة إلى المتعاملين الاقتصاديين كتابياً عن طريق الفاكس أو عن طريق الاستلام اليدوي، مع الاعلان في الموقع الالكتروني للكلية و الموقع الالكتروني للجامعة و اشهار الاعلان على مستوى غرفة التجارة ، الوكالة الوطنية لدعم تشغيل الشباب (ANSEJ) ،الوكالة الوطنية لتسيير القرض المصغر (ANGEM) الصندوق الوطني للتأمين عن البطالة (CNEC).
         </p>
         <p style="text-align:right; font-size: 20px; font-family: 'Times New Roman'">
-${STATIC_TEXTS.CONTENT.SECTION_2_ADDITIONAL(rawDate)}
+    ${STATIC_TEXTS.CONTENT.SECTION_2_ADDITIONAL(rawDate, montantParagraphs)}
         </p>
 
         <h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">
