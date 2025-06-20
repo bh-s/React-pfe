@@ -16,7 +16,6 @@ function Appel() {
     const [error, setError] = useState('');
     const [items, setItems] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [dateError, setDateError] = useState('');
     const bg = useColorModeValue("white");
     const history = useNavigate();
     const email = localStorage.getItem('email');
@@ -28,22 +27,7 @@ function Appel() {
         fileBase64_2: ''
     });
 
-    const validateDate = (selectedDate) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const inputDate = new Date(selectedDate);
-        return inputDate >= today;
-    };
-
     const handleChange = (e) => {
-        if (e.target.name === 'date') {
-            const isValidDate = validateDate(e.target.value);
-            if (!isValidDate) {
-                setDateError('La date doit être ultérieure ou égale à aujourd\'hui');
-            } else {
-                setDateError('');
-            }
-        }
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -76,24 +60,12 @@ function Appel() {
             setIsSubmitting(false); // Reset submitting state
             return;
         }
-        
-        // Validate date before submission
-        if (!formData.date) {
-            setError("La date est obligatoire");
-            return;
-        }
-
-        if (!validateDate(formData.date)) {
-            setError("La date doit être ultérieure ou égale à aujourd'hui");
-            return;
-        }
-
         try {
             const userData = {
                 ...formData,
                 role: "pending",
             };
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/saveAnnonce`, userData);
+            const response = await axios.post(`https://backend-e0nx.onrender.com/saveAnnonce`, userData);
             const { data } = response;
             console.log(response.data);
             if (data) {
@@ -120,7 +92,7 @@ function Appel() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/getAnnonce`);
+                const response = await axios.get(`https://backend-e0nx.onrender.com/getAnnonce`);
                 setItems(response.data);
                 console.log(response.data);
                 setError("");
@@ -138,7 +110,7 @@ function Appel() {
 
     const handleDelete = async (itemIdToDelete) => {
         try {
-            const response = await axios.delete(`${import.meta.env.VITE_API_URL}/deleteAnnonce/${itemIdToDelete}`);
+            const response = await axios.delete(`https://backend-e0nx.onrender.com/deleteAnnonce/${itemIdToDelete}`);
             console.log(response.data);
             const updatedItems = items.filter(item => item._id !== itemIdToDelete);
             setItems(updatedItems);
@@ -176,7 +148,7 @@ function Appel() {
                         </div>
                         <Menu>
                             <MenuButton as={Avatar}
-                                style={{ height: "33px", borderRadius: "90px", cursor: "pointer", marginRight: "-27px", marginTop: '10px', backgroundColor: '#11047A' }}
+                                style={{ height: "33px", backgroundColor: "#A0AEC0", borderRadius: "90px", cursor: "pointer", marginRight: "-27px", marginTop: '10px', backgroundColor: '#11047A' }}
                                 src='https://bit.ly/broken-link'
                             />
                             <MenuList style={{ borderRadius: '5px', border: '1px solid #cccccc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.4)' }}>
@@ -259,16 +231,8 @@ function Appel() {
                                 <FormLabel fontSize={23} fontWeight={500} marginTop={14} marginBottom={10}>Lancer un Appel d'offre</FormLabel>
                                 <label className='margininput'>Titre de l'annonce</label>
                                 <input className="input2" id='input2' type="text" name="titre" placeholder="titre" onChange={handleChange} />
-                                <label className='margininput'>Dernier délai *</label>
-                                <input 
-                                    className={`input3 ${dateError ? 'error-input' : ''}`} 
-                                    type="date" 
-                                    name="date" 
-                                    min={new Date().toISOString().split('T')[0]}
-                                    required
-                                    onChange={handleChange} 
-                                />
-                                {dateError && <div className="error-message">{dateError}</div>}
+                                <label className='margininput'>Dernier délaai</label>
+                                <input className="input3" type="date" name="date" placeholder="" onChange={handleChange} />
                                 <label className='margininput'>Type</label>
                                 <select className='input3' name="type" onChange={handleChange}>
                                     <option value="">Sélectionnez un type</option>
