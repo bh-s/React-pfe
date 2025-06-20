@@ -15,7 +15,6 @@ import Table from '@tiptap/extension-table';
 import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
 import TableRow from '@tiptap/extension-table-row';
-import { yearsToQuarters } from 'date-fns';
 
 const STATIC_TEXTS = {
     TITLES: {
@@ -25,7 +24,6 @@ const STATIC_TEXTS = {
         SECTION_1: "1. تعليل الإجراء:",
         SECTION_2: "2. معلومات حول إجراء الاستشارة:",
         SECTION_3: "3. الأهلية:",
-        SECTION_4: "4. التعريف بالمتعاملين الاقتصاديين الذين تمت استشارتهم:"
     },
     CONTENT: {
         SECTION_1: `تمت الاستشارة وفقا لأحكام المرسوم الرئاسي 15-247 المؤرخ في 16 سبتمبر 2015 المتضمن تنظيم الصفقات العمومية وتفويضات المرفق العام لا سيما المواد 13 إلى 22 منه و القانون رقم 23-12 المؤرخ في 05 أوت 2023 المحدد للقواعد العامة المتعلقة بالصفقات العمومية.
@@ -220,10 +218,6 @@ const montantParagraphs = Object.values(
         <p style="text-align:right; font-size: 20px; font-family: 'Times New Roman'">
             ${STATIC_TEXTS.CONTENT.SECTION_3}
         </p>
-
-        <h2 style="text-align: center; font-size: 30px; font-family: 'Times New Roman'">
-            ${STATIC_TEXTS.TITLES.SECTION_4}
-        </h2>
     `;
     };
 

@@ -43,6 +43,7 @@ import MenuBar from './Menubar';
 import Entete from './Entete';
 import Section1 from './Section1';
 import MarkdownViewer from './Markdownfile';
+import Section2 from './Section2';
 
 
 function Rapport() {
@@ -167,6 +168,7 @@ function Rapport() {
                         <MenuBar editor={editor} />
                         <Entete />
                         <Section1 />
+                        <Section2/>
                         <Flex justify="end" gap={4}>
                             <Button
                                 leftIcon={<Save size={20} />}

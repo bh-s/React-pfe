@@ -181,7 +181,6 @@ const DynamicTable = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/dataEvaluation?projectName=${projectName}`)
-
       if (response.data) {
         if (Array.isArray(response.data)) {
           if (response.data.length > 0) {
@@ -193,7 +192,8 @@ const DynamicTable = () => {
               setGroupCount(response.data[0].suppliers.length)
             }
           }
-          console.log('ne')
+console.log('jjj'+ response)
+
         } else {
           setProducts(response.data.products || [])
           setProjectId(response.data._id)
@@ -229,6 +229,8 @@ const DynamicTable = () => {
               _id: data[0]._id,
             })
             console.log(data)
+            console.log('jjj'+ data[0])
+
           }
         })
         .catch((err) => console.error("Error loading data:", err))
