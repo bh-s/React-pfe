@@ -40,6 +40,7 @@
     "file-saver": "^2.0.5",
     "framer-motion": "^11.1.7",
     "html-docx-js": "^0.3.1",
+    "html-to-text": "^9.0.5",
     "lucide-react": "^0.487.0",
     "mammoth": "^1.9.1",
     "pdf-lib": "^1.17.1",
